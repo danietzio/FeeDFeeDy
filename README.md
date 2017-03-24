@@ -1,1 +1,1 @@
-Feed Reader For News Geeks
+RSS Reader For News Geeks
