@@ -1,9 +1,16 @@
 import React from 'react';
+import LeftPanel from '../components/left-panel.js';
+import RightPanel from '../components/right-panel.js';
 
-export default class layout extends React.Component {
+import '../styles/layout.css';
+
+export default class Layout extends React.Component {
 	render() {
 		return(
-			<h1>This Is Main Layout</h1>
+			<div className="fluid-container">
+					<LeftPanel></LeftPanel>
+					<RightPanel src="http://localhost:8000/assets/images"></RightPanel>
+			</div>
 		);
-	}	
+	}
 }
