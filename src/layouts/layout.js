@@ -9,7 +9,7 @@ export default class Layout extends React.Component {
 		return(
 			<div className="fluid-container">
 					<LeftPanel></LeftPanel>
-					<RightPanel></RightPanel>
+					<RightPanel src="http://localhost:8000/assets/images"></RightPanel>
 			</div>
 		);
 	}
