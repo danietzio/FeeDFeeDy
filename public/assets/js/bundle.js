@@ -31348,7 +31348,7 @@
 
 	var _rightPanel2 = _interopRequireDefault(_rightPanel);
 
-	__webpack_require__(199);
+	__webpack_require__(205);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31374,7 +31374,7 @@
 					'div',
 					{ className: 'fluid-container' },
 					_react2.default.createElement(_leftPanel2.default, null),
-					_react2.default.createElement(_rightPanel2.default, { src: 'http://localhost:8000/assets/images' })
+					_react2.default.createElement(_rightPanel2.default, null)
 				);
 			}
 		}]);
@@ -34247,7 +34247,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(197);
+	var _rightTopMenu = __webpack_require__(197);
+
+	var _rightTopMenu2 = _interopRequireDefault(_rightTopMenu);
+
+	var _rightContent = __webpack_require__(200);
+
+	var _rightContent2 = _interopRequireDefault(_rightContent);
+
+	__webpack_require__(203);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34275,45 +34283,8 @@
 					_react2.default.createElement(
 						'div',
 						{ className: 'fluid-container' },
-						_react2.default.createElement(
-							'div',
-							{ className: 'row', id: 'right-setting-panel' },
-							_react2.default.createElement(
-								'div',
-								{ className: 'col-xs-3 col-sm-3 col-md-3 middleDiv' },
-								_react2.default.createElement('img', { className: 'icons', src: this.props.src + "/refresh.png" }),
-								_react2.default.createElement('img', { className: 'icons', src: this.props.src + "/down-arrow-white.png" })
-							),
-							_react2.default.createElement(
-								'div',
-								{ className: 'col-xs-5 col-sm-7 col-md-7 middleDiv' },
-								_react2.default.createElement(
-									'div',
-									{ id: 'bk_search' },
-									_react2.default.createElement('i', { className: 'fa fa-2x fa-search', 'aria-hidden': 'true' }),
-									_react2.default.createElement('input', { placeholder: 'Search Here...', type: 'text' })
-								)
-							),
-							_react2.default.createElement(
-								'div',
-								{ className: 'col-xs-4 col-sm-2 col-md-2 middleDiv' },
-								_react2.default.createElement(
-									'div',
-									{ id: 'bk_profile' },
-									_react2.default.createElement(
-										'span',
-										null,
-										'Dani Nasiri'
-									),
-									_react2.default.createElement(
-										'a',
-										{ href: '#' },
-										_react2.default.createElement('div', null)
-									)
-								)
-							)
-						),
-						_react2.default.createElement('div', { className: 'row', id: 'right-main-panel' })
+						_react2.default.createElement(_rightTopMenu2.default, { src: 'http://localhost:8000/assets/images' }),
+						_react2.default.createElement(_rightContent2.default, null)
 					)
 				);
 			}
@@ -34328,10 +34299,221 @@
 /* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	__webpack_require__(198);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var RightTopMenu = function (_React$Component) {
+	  _inherits(RightTopMenu, _React$Component);
+
+	  function RightTopMenu() {
+	    _classCallCheck(this, RightTopMenu);
+
+	    return _possibleConstructorReturn(this, (RightTopMenu.__proto__ || Object.getPrototypeOf(RightTopMenu)).call(this));
+	  }
+
+	  _createClass(RightTopMenu, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'row', id: 'right-setting-panel' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-xs-3 col-sm-3 col-md-3 middleDiv' },
+	          _react2.default.createElement('img', { className: 'icons', src: this.props.src + "/refresh.png" }),
+	          _react2.default.createElement('img', { className: 'icons', src: this.props.src + "/down-arrow-white.png" })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-xs-5 col-sm-7 col-md-7 middleDiv' },
+	          _react2.default.createElement(
+	            'div',
+	            { id: 'bk_search' },
+	            _react2.default.createElement('i', { className: 'fa fa-2x fa-search', 'aria-hidden': 'true' }),
+	            _react2.default.createElement('input', { placeholder: 'Search Here...', type: 'text' })
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'col-xs-4 col-sm-2 col-md-2 middleDiv' },
+	          _react2.default.createElement(
+	            'div',
+	            { id: 'bk_profile' },
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              'Dani Nasiri'
+	            ),
+	            _react2.default.createElement(
+	              'a',
+	              { href: '#' },
+	              _react2.default.createElement('div', null)
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return RightTopMenu;
+	}(_react2.default.Component);
+
+	exports.default = RightTopMenu;
+
+/***/ },
+/* 198 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(198);
+	var content = __webpack_require__(199);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(189)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../../node_modules/css-loader/index.js!./right-top-menu.css", function() {
+				var newContent = require("!!../../node_modules/css-loader/index.js!./right-top-menu.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 199 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(184)(undefined);
+	// imports
+
+
+	// module
+	exports.push([module.id, "/* Right Setting Panel*/\r\n#right-setting-panel {\r\n    height: 10%;\r\n    background-color: #FF9009;\r\n    margin: 0%;\r\n    height: 80px;\r\n}\r\n\r\n#right-setting-panel > div {\r\n  padding : 0%;\r\n  margin : 0%;\r\n  padding-left: 3%;\r\n  padding-right: 3%;\r\n}\r\n\r\n#right-setting-panel div .icons {\r\n    width: 30px;\r\n    cursor: pointer;\r\n    display: inline-block;\r\n    margin-left: 20px;\r\n}\r\n\r\n.middleDiv {\r\n  position: relative;\r\n  top : 25%;\r\n  padding-left : 0%;\r\n  padding-right: 0%;\r\n  margin-left : 0%;\r\n  margin-right: 0%;\r\n}\r\n\r\n/* Search Section in the right setting panel*/\r\n#bk_search , #bk_profile {\r\n  display: inline-block;\r\n}\r\n\r\n#bk_search input {\r\n  background: transparent;\r\n  border: none;\r\n  border-bottom: 1px dotted white;\r\n  font-size: 18px;\r\n  outline: none;\r\n  color : white;\r\n  width: 340px;\r\n}\r\n\r\n#bk_search i {\r\n  color : white;\r\n}\r\n\r\n/* Profile Iamge*/\r\n#bk_profile span {\r\n    position: absolute;\r\n    top: 25%;\r\n    color : white;\r\n}\r\n\r\n#bk_profile a {\r\n    position: relative;\r\n    top: 10%;\r\n    margin-left: 78px;\r\n}\r\n#bk_profile a div {\r\n    display: inline-block;\r\n    background-image : url(\"http://localhost:8000/assets/images/profile.png\");\r\n    background-size: cover;\r\n    background-repeat: no-repeat;\r\n    border: 2px solid white;\r\n    width: 45px;\r\n    height: 45px;\r\n    border-radius: 50% !important;\r\n}\r\n\r\n/* Left Segment of Right setting Panel*/\r\n#right-setting-panel > div:first-child {\r\n  text-align: left;\r\n}\r\n\r\n/* Center Segment of Right setting Panel*/\r\n#right-setting-panel > div:nth-child(2) {\r\n  text-align: center;\r\n}\r\n\r\n\r\n/* Right Segment of Right setting Panel*/\r\n#right-setting-panel > div:nth-child(3) {\r\n  text-align: right;\r\n}\r\n\r\n/* Medium Displays */\r\n@media (max-width: 992px) {\r\n\r\n  #right-setting-panel > div {\r\n    text-align: center;\r\n    padding: 0%;\r\n    padding-left: 0%;\r\n    padding-right: 0%;\r\n  }\r\n}\r\n\r\n/* Small Displays */\r\n@media (max-width: 768px) {\r\n  #bk_search input {\r\n    width: 250px;\r\n    font-size : 14px;\r\n  }\r\n  #right-setting-panel div .icons {\r\n      width: 25px;\r\n      margin-left: 10px;\r\n  }\r\n  #bk_profile a div {\r\n      width: 35px;\r\n      height: 35px;\r\n  }\r\n\r\n  .middleDiv {\r\n    top : 30%;\r\n  }\r\n\r\n  .fa-search {\r\n    display : none !important;\r\n  }\r\n}\r\n\r\n/* Small Displays */\r\n@media (max-width: 468px) {\r\n  #bk_search input {\r\n    width: 100px;\r\n  }\r\n}\r\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 200 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	__webpack_require__(201);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var RightContent = function (_React$Component) {
+	  _inherits(RightContent, _React$Component);
+
+	  function RightContent() {
+	    _classCallCheck(this, RightContent);
+
+	    return _possibleConstructorReturn(this, (RightContent.__proto__ || Object.getPrototypeOf(RightContent)).call(this));
+	  }
+
+	  _createClass(RightContent, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement('div', { className: 'row', id: 'right-main-panel' });
+	    }
+	  }]);
+
+	  return RightContent;
+	}(_react2.default.Component);
+
+	exports.default = RightContent;
+
+/***/ },
+/* 201 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(202);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(189)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../../node_modules/css-loader/index.js!./right-content.css", function() {
+				var newContent = require("!!../../node_modules/css-loader/index.js!./right-content.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 202 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(184)(undefined);
+	// imports
+
+
+	// module
+	exports.push([module.id, "/* Right Main Panel*/\r\n#right-main-panel {\r\n    height: 90%;\r\n    background-color: #FF9009;\r\n}\r\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 203 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(204);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(189)(content, {});
@@ -34351,7 +34533,7 @@
 	}
 
 /***/ },
-/* 198 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(184)(undefined);
@@ -34359,19 +34541,19 @@
 
 
 	// module
-	exports.push([module.id, "#right-panel-container {\r\n  margin-left : 270px;\r\n  position : relative;\r\n  height: 100%;\r\n}\r\n\r\n/* Right Setting Panel*/\r\n#right-setting-panel {\r\n    height: 10%;\r\n    background-color: #FF9009;\r\n    margin: 0%;\r\n    height: 80px;\r\n}\r\n\r\n#right-setting-panel > div {\r\n  padding : 0%;\r\n  margin : 0%;\r\n  padding-left: 3%;\r\n  padding-right: 3%;\r\n}\r\n\r\n#right-setting-panel div .icons {\r\n    width: 30px;\r\n    cursor: pointer;\r\n    display: inline-block;\r\n    margin-left: 20px;\r\n}\r\n\r\n.middleDiv {\r\n  position: relative;\r\n  top : 25%;\r\n  padding-left : 0%;\r\n  padding-right: 0%;\r\n  margin-left : 0%;\r\n  margin-right: 0%;\r\n}\r\n\r\n/* Search Section in the right setting panel*/\r\n#bk_search , #bk_profile {\r\n  display: inline-block;\r\n}\r\n\r\n#bk_search input {\r\n  background: transparent;\r\n  border: none;\r\n  border-bottom: 1px dotted white;\r\n  font-size: 18px;\r\n  outline: none;\r\n  color : white;\r\n  width: 340px;\r\n}\r\n\r\n#bk_search i {\r\n  color : white;\r\n}\r\n\r\n/* Profile Iamge*/\r\n#bk_profile span {\r\n    position: absolute;\r\n    top: 25%;\r\n    color : white;\r\n}\r\n\r\n#bk_profile a {\r\n    position: relative;\r\n    top: 10%;\r\n    margin-left: 78px;\r\n}\r\n#bk_profile a div {\r\n    display: inline-block;\r\n    background-image : url(\"http://localhost:8000/assets/images/profile.png\");\r\n    background-size: cover;\r\n    background-repeat: no-repeat;\r\n    border: 2px solid white;\r\n    width: 45px;\r\n    height: 45px;\r\n    border-radius: 50% !important;\r\n}\r\n\r\n/* Left Segment of Right setting Panel*/\r\n#right-setting-panel > div:first-child {\r\n  text-align: left;\r\n}\r\n\r\n/* Center Segment of Right setting Panel*/\r\n#right-setting-panel > div:nth-child(2) {\r\n  text-align: center;\r\n}\r\n\r\n\r\n/* Right Segment of Right setting Panel*/\r\n#right-setting-panel > div:nth-child(3) {\r\n  text-align: right;\r\n}\r\n\r\n/* Right Main Panel*/\r\n#right-main-panel {\r\n    height: 90%;\r\n    background-color: #FF9009;\r\n}\r\n\r\n/* Medium Displays */\r\n@media (max-width: 992px) {\r\n  #right-panel-container {\r\n    margin-left : 0px;\r\n    position : relative;\r\n  }\r\n\r\n  #right-setting-panel > div {\r\n    text-align: center;\r\n    padding: 0%;\r\n    padding-left: 0%;\r\n    padding-right: 0%;\r\n  }\r\n}\r\n\r\n\r\n/* Small Displays */\r\n@media (max-width: 768px) {\r\n  #bk_search input {\r\n    width: 250px;\r\n    font-size : 14px;\r\n  }\r\n  #right-setting-panel div .icons {\r\n      width: 25px;\r\n      margin-left: 10px;\r\n  }\r\n  #bk_profile a div {\r\n      width: 35px;\r\n      height: 35px;\r\n  }\r\n\r\n  .middleDiv {\r\n    top : 30%;\r\n  }\r\n\r\n  .fa-search {\r\n    display : none !important;\r\n  }\r\n}\r\n\r\n/* Small Displays */\r\n@media (max-width: 468px) {\r\n  #bk_search input {\r\n    width: 100px;\r\n  }\r\n}\r\n", ""]);
+	exports.push([module.id, "#right-panel-container {\r\n  margin-left : 270px;\r\n  position : relative;\r\n  height: 100%;\r\n}\r\n\r\n\r\n/* Medium Displays */\r\n@media (max-width: 992px) {\r\n  #right-panel-container {\r\n    margin-left : 0px;\r\n    position : relative;\r\n  }\r\n}\r\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 199 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(200);
+	var content = __webpack_require__(206);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(189)(content, {});
@@ -34391,7 +34573,7 @@
 	}
 
 /***/ },
-/* 200 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(184)(undefined);
