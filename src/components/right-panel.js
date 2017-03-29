@@ -1,5 +1,8 @@
 import React from 'react';
 
+import RightTopMenu from '../components/right-top-menu.js';
+import RightContent from '../components/right-content.js';
+
 import '../styles/right-panel.css';
 
 export default class RightPanel extends React.Component {
@@ -8,7 +11,7 @@ export default class RightPanel extends React.Component {
       <div id="right-panel-container">
 					<div className="fluid-container">
 						<RightTopMenu src="http://localhost:8000/assets/images"></RightTopMenu>
-						<RightConent></RightConent>
+						<RightContent></RightContent>
 					</div>
 			</div>
 		);

@@ -1,19 +1,19 @@
 /* Right Setting Panel*/
-#right-setting-panel {
+#right-top-menu-container {
     height: 10%;
     background-color: #FF9009;
     margin: 0%;
     height: 80px;
 }
 
-#right-setting-panel > div {
+#right-top-menu-container > div {
   padding : 0%;
   margin : 0%;
   padding-left: 3%;
   padding-right: 3%;
 }
 
-#right-setting-panel div .icons {
+#right-top-menu-container div .icons {
     width: 30px;
     cursor: pointer;
     display: inline-block;
@@ -72,25 +72,27 @@
 }
 
 /* Left Segment of Right setting Panel*/
-#right-setting-panel > div:first-child {
+#right-top-menu-container > div:first-child {
   text-align: left;
 }
 
 /* Center Segment of Right setting Panel*/
-#right-setting-panel > div:nth-child(2) {
+#right-top-menu-container > div:nth-child(2) {
   text-align: center;
 }
 
 
 /* Right Segment of Right setting Panel*/
-#right-setting-panel > div:nth-child(3) {
+#right-top-menu-container > div:nth-child(3) {
   text-align: right;
 }
 
 /* Medium Displays */
 @media (max-width: 992px) {
-
-  #right-setting-panel > div {
+  #right-top-menu-container {
+    margin-left: -270px;
+  }
+  #right-top-menu-container > div {
     text-align: center;
     padding: 0%;
     padding-left: 0%;
@@ -100,11 +102,15 @@
 
 /* Small Displays */
 @media (max-width: 768px) {
+  #right-top-menu-container {
+    margin-left: 0px;
+  }
+
   #bk_search input {
     width: 250px;
     font-size : 14px;
   }
-  #right-setting-panel div .icons {
+  #right-top-menu-container div .icons {
       width: 25px;
       margin-left: 10px;
   }

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import '../styles/right-top-menu.css';
 
 export default class RightContent extends React.Component {
@@ -8,7 +9,7 @@ export default class RightContent extends React.Component {
   }
   render() {
     return(
-      <div className="row" id="right-setting-panel">
+      <div className="row" id="right-top-menu-container">
           <div className="col-xs-3 col-sm-3 col-md-3 middleDiv">
                 <img className="icons" src={ this.props.src + "/refresh.png" } />
                 <img className="icons" src={ this.props.src + "/down-arrow-white.png" } />
