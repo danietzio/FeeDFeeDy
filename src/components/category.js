@@ -7,13 +7,6 @@ export default class Category extends React.Component {
 		//calling upper constructor
 		super();
 
-		// set intial categories
-		this.state = {
-			categories : [{ id : 1 , descp : 'All Items', 'icon' : 'server'},
-										{ id : 2 , descp : 'Starred Items' , 'icon' : 'star'},
-										{ id : 3 , descp : 'Categorized', 'icon' : 'circle-o'}
-									 ]
-		}
 	}
 	render() {
 		const list = this._getComments();
@@ -23,16 +16,26 @@ export default class Category extends React.Component {
 	}
 
 	_getComments() {
-		return this.state.categories.map((value) => {
+		// get all of the feeds
+		const  categories = this.props.feeds;
+
+		// unCategorized Items
+
+		// Categorized Items
+
+		return categories.map((value) => {
 				return(
 					<li key={ value.id }>
 						<span>
 							<i className={ "fa fa-" + value.icon } aria-hidden="true"></i>
 						</span>
-						<a>{ value.descp }</a>
+						<a onClick={ this.props.feedClicked(value.id)}>{ value.name }</a>
+
+						 {/* Position Of the subfiled for categorized and unCategorized feeds */}
 					</li>
 			);
 		});
 
 	}
+
 }

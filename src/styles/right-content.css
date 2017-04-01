@@ -1,12 +1,12 @@
 /* Right Main Panel*/
 #feed-container {
-    height: 90%;
-    margin : 0%;
+  height: 90%;
+  margin : 0%;
 }
 
 #feed-container > div {
-    padding-left: 3%;
-    padding-right: 3%;
+  padding-left: 3%;
+  padding-right: 3%;
 }
 
 .feed-header-container {
@@ -46,72 +46,7 @@
   margin-top: 10px;
 }
 
-/* Each Article Setting */
-article {
-  padding-top : 2px;
-  border-top : 1px solid #f7f7f7;
-  width: 100%;
-}
 
-.article-container {
-  display: table;
-  text-align: center;
-}
-
-.article-title-container {
-  display: table-cell;
-  width: 191px;
-  overflow: hidden;
-  height: 2em;
-  text-align: left;
-  vertical-align: middle;
-}
-
-.article-data-container {
-  height: 2em;
-  overflow: hidden;
-  display: block;
-  width: auto;
-  vertical-align: middle;
-  text-align: left;
-}
-
-.article-metadata-container {
-  display: table-cell;
-  width: 121px;
-  text-align: right;
-  vertical-align: middle;
-}
-
-.article-actions-container {
-  display: table-cell;
-  width: 110px;
-  vertical-align: middle;
-  text-align: center;
-}
-
-.article-data-description , .column-description {
-  line-height: 2em;
-  vertical-align: middle;
-}
-
-/* article expanded setting*/
-.article-expand-container {
-  text-align: center;
-  border: 1px solid #f7f7f7;
-  padding : 6px;
-  border-radius: 10px !important
-}
-
-.article-image-container img{
-    width : 400px;
-    height: 400px;
-}
-
-.article-expand-descp {
-  text-align: left;
-  margin-top : 10px;
-}
 
 /* Medium Displays */
 @media (max-width: 992px) {

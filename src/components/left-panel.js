@@ -13,7 +13,7 @@ export default class LeftPanel extends React.Component {
 
 							<li id="logo-header"><Logo src="http://localhost:8000" descp="Company logo" /></li>
 
-							<li><Category /></li>
+							<li><Category feeds={ this.props.feeds } changeFeed = { this.props.changeFeed }/></li>
 
 							<li className="button" id="add-feed">
 									<span>

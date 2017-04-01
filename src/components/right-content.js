@@ -1,11 +1,15 @@
 import React from 'react';
+import Article from '../components/feed-article.js';
+
 import '../styles/right-content.css';
 
 export default class RightContent extends React.Component {
   constructor() {
     super();
 
+    this._getComments = this._getComments.bind(this);
   }
+
   render() {
     return(
       <div className="row" id="feed-container">
@@ -13,7 +17,7 @@ export default class RightContent extends React.Component {
           <div className="feed-header-container">
             <div className="feed-header-left-container">
               <i className="fa fa-newspaper-o" aria-hidden="true"></i>
-              <span id="title">IT News - Zoomit Feed</span>
+              <span id="title">{ this.props.feed.name }</span>
             </div>
             <div className="feed-header-right-container">
               <button className="feed-header-right-btn">Unsubscribe</button>
@@ -22,44 +26,35 @@ export default class RightContent extends React.Component {
             </div>
           </div>
           <div className="row feed-content-container">
-              <article>
-                <div className="article-container">
-                  <div className="article-title-container">
-                    <span className="column-description">ZoomIT News</span>
-                  </div>
-                  <div className="article-data-container">
-                    <span className="column-description article-data-description">
-                      <span>This is new story</span>
-                      <span>this story is about oaddsagsdgdsgwne young man that is very popular,he live in
-                      america, he love ...</span>
-                    </span>
-                  </div>
-                  <div className="article-metadata-container">
-                    <span className="column-description"> 10:40 PM </span>
-                  </div>
-                  <div className="article-actions-container">
-                    <span className="column-description">
-                      <a><i className='fa fa-check' aria-hidden='true'></i></a>
-                      <a><i className='fa fa-check' aria-hidden='true'></i></a>
-                      <a><i className='fa fa-check' aria-hidden='true'></i></a>
-                    </span>
-                  </div>
-                </div>
-                <div className="article-expand-container">
-                  <h1> Apple surface is very nice </h1>
-                  <div className="article-image-container">
-                    <img src="http://cdn01.zoomit.ir/2017/3/01b5487f-44cf-42be-bc74-5c38c4189356.jpg" />
-                  </div>
-                  <div  className="article-expand-descp">
-                    <span>
-                       In the recruiting wars, a cool office is critical. Not just for scrappy startups, but big businesses with regional HQs, as well. So while WeWork signs questionable 20-year leases to provide desks for twenty-something engineers, Industrious is taking a more classy and conservative approach to coworking space.
-                    </span>
-                  </div>
-                </div>
-              </article>
+              { this._getComments() }
           </div>
         </div>
       </div>
     );
   }
+
+  _getComments() {
+    const articles = this._getReqFeedArticles();
+
+    return articles.map((article) => {
+      return <Article value= { article } />
+    });
+  }
+
+  _getReqFeedArticles() {
+    // felan chon feed haye mokhtalef nadarim, nemitonim request vagheyi bedim
+    // va emkan dare ke function varible vorodi masalan "Feeed name" dashte bashe
+
+
+    const articles = [
+      { feed : 'ZoomiIT' ,title : 'Article 1', descp : 'This is Article 1 , And Article is about everything that you can think', date : '10:40PM', img : 'http://cdn01.zoomit.ir/2017/3/01b5487f-44cf-42be-bc74-5c38c4189356.jpg'},
+      { feed : 'ZoomiIT' ,title : 'Article 2', descp : 'This is Article 2 , And Article is about everything that you can think', date : '10:40PM', img : 'https://tctechcrunch2011.files.wordpress.com/2017/03/gold-iphone-shot1.png?w=680'},
+      { feed : 'ZoomiIT' ,title : 'Article 3', descp : 'This is Article 3 , And Article is about everything that you can think', date : '10:40PM', img : 'https://tctechcrunch2011.files.wordpress.com/2016/09/4715498386_3bf830783c_b.jpg?w=680'},
+      { feed : 'ZoomiIT' ,title : 'Article 4', descp : 'This is Article 4 , And Article is about everything that you can think', date : '10:40PM', img : 'https://tctechcrunch2011.files.wordpress.com/2017/03/jl-2.png?w=680'},
+      { feed : 'ZoomiIT' ,title : 'Article 5', descp : 'This is Article 5 , And Article is about everything that you can think', date : '10:40PM', img : 'https://tctechcrunch2011.files.wordpress.com/2017/03/10_matternet_m2_drone_lugano_switzerland.jpg?w=680'},
+    ];
+
+    return articles;
+  }
+
 }
