@@ -7,11 +7,12 @@ import '../styles/right-panel.css';
 
 export default class RightPanel extends React.Component {
 	render() {
+		{ console.log(this.props)}
 		return(
       <div id="right-panel-container">
 					<div className="fluid-container">
 						<RightTopMenu src="http://localhost:8000/assets/images"></RightTopMenu>
-						<RightContent></RightContent>
+						<RightContent feed = { this.props.feed } unsub = { this.props.unsub }></RightContent>
 					</div>
 			</div>
 		);

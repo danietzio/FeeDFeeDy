@@ -31364,22 +31364,36 @@
 		function Layout() {
 			_classCallCheck(this, Layout);
 
+			// binding This to getFeedByID Function
 			var _this = _possibleConstructorReturn(this, (Layout.__proto__ || Object.getPrototypeOf(Layout)).call(this));
 
-			_this.state = {
-				defaultFeedId: ''
-			};
+			_this._getFeedByID = _this._getFeedByID.bind(_this);
+
+			// binding This to Change Default Feed function
+			_this._changeFeed = _this._changeFeed.bind(_this);
+
+			// binding This to Unsubscribe Function
+			_this._unSubscribe = _this._unSubscribe.bind(_this);
 			return _this;
 		}
 
 		_createClass(Layout, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				this.state = {
+					feeds: [{ id: '1', icon: 'circle-o', name: 'ZoomIT', link: '#', categorized: false, category: '', starred: false }, { id: '2', icon: 'circle-o', name: 'Techrunch', link: '#', categorized: false, category: '', starred: false }, { id: '3', icon: 'circle-o', name: 'IT News', link: '#', categorized: false, category: '', starred: false }],
+					defaultFeedId: 1
+				};
+			}
+		}, {
 			key: 'render',
 			value: function render() {
+				var feed = this._getFeedByID(this.state.defaultFeedId);
 				return _react2.default.createElement(
 					'div',
 					{ className: 'fluid-container' },
-					_react2.default.createElement(_leftPanel2.default, null),
-					_react2.default.createElement(_rightPanel2.default, null)
+					_react2.default.createElement(_leftPanel2.default, { feeds: this.state.feeds, changeFeed: this._changeFeed }),
+					_react2.default.createElement(_rightPanel2.default, { feed: feed, unsub: this._unSubscribe })
 				);
 			}
 
@@ -31390,32 +31404,46 @@
 			value: function _getFeeds() {
 
 				// inja miaim va feed haro load mikonim
-				var feeds = {
-					name: 'All Items',
-					subFeeds: {
-						'1-2': { name: 'ZoomIT', link: '#', categorized: false, category: '', starred: false },
-						'1-3': { name: 'Techrunch', link: '#', categorized: false, category: '', starred: false },
-						'1-4': { name: 'IT News', link: '#', categorized: false, category: '', starred: false }
-					}
-				};
+				// inja bayad bejaye tarife local , az GET request estefade konim
 
-				return feeds;
+				return this.state.feeds;
 			}
 
 			// Get Feed by id
 
 		}, {
-			key: '_getFeedById',
-			value: function _getFeedById(id) {
+			key: '_getFeedByID',
+			value: function _getFeedByID(id) {
 
 				// Get Information Of all Feeds
-				var feeds = this._getFeeds();
+				var feeds = this.state.feeds;
 
 				// find feed by given id
-				var feed = feeds.subFeeds[id];
+				var feed = feeds[id - 1];
 
 				//returning Specified feed's Information
 				return feed;
+			}
+
+			// Changing Default Feed ID when use click on left panel links
+
+		}, {
+			key: '_changeFeed',
+			value: function _changeFeed(id) {
+				this.setState({ defaultFeedId: id });
+			}
+
+			// unsubscribe feed by ID
+
+		}, {
+			key: '_unSubscribe',
+			value: function _unSubscribe(id) {
+				var temp = this.state.feeds;
+				temp.splice(id, 1);
+
+				this.setState({
+					feeds: temp
+				});
 			}
 		}]);
 
@@ -31484,7 +31512,7 @@
 						_react2.default.createElement(
 							'li',
 							null,
-							_react2.default.createElement(_category2.default, null)
+							_react2.default.createElement(_category2.default, { feeds: this.props.feeds, changeFeed: this.props.changeFeed })
 						),
 						_react2.default.createElement(
 							'li',
@@ -34143,15 +34171,8 @@
 		function Category() {
 			_classCallCheck(this, Category);
 
-			// set intial categories
-			var _this = _possibleConstructorReturn(this, (Category.__proto__ || Object.getPrototypeOf(Category)).call(this));
 			//calling upper constructor
-
-
-			_this.state = {
-				categories: [{ id: 1, descp: 'All Items', 'icon': 'server' }, { id: 2, descp: 'Starred Items', 'icon': 'star' }, { id: 3, descp: 'Categorized', 'icon': 'circle-o' }]
-			};
-			return _this;
+			return _possibleConstructorReturn(this, (Category.__proto__ || Object.getPrototypeOf(Category)).call(this));
 		}
 
 		_createClass(Category, [{
@@ -34167,7 +34188,17 @@
 		}, {
 			key: '_getComments',
 			value: function _getComments() {
-				return this.state.categories.map(function (value) {
+				var _this2 = this;
+
+				// get all of the feeds
+				var categories = this.props.feeds;
+
+				// Categorized Items
+				var categorizedFeeds = categories.filter(function (value) {
+					return value.categorized;
+				});
+
+				categorizedFeeds = categorizedFeeds.map(function (value) {
 					return _react2.default.createElement(
 						'li',
 						{ key: value.id },
@@ -34178,11 +34209,94 @@
 						),
 						_react2.default.createElement(
 							'a',
-							null,
-							value.descp
+							{ onClick: _this2.props.changeFeed(value.id) },
+							value.name
 						)
 					);
 				});
+
+				// Uncategorized Items
+				var unCategorizedFeeds = categories.filter(function (value) {
+					return !value.categorized;
+				});
+
+				unCategorizedFeeds = unCategorizedFeeds.map(function (value) {
+					return _react2.default.createElement(
+						'li',
+						{ key: value.id },
+						_react2.default.createElement(
+							'span',
+							null,
+							_react2.default.createElement('i', { className: "fa fa-" + value.icon, 'aria-hidden': 'true' })
+						),
+						_react2.default.createElement(
+							'a',
+							{ onClick: function onClick() {
+									return _this2.props.changeFeed(value.id);
+								} },
+							value.name
+						)
+					);
+				});
+
+				// main titles for left panel links
+				var panelTitrs = [_react2.default.createElement(
+					'li',
+					{ key: "all-items" },
+					_react2.default.createElement(
+						'span',
+						null,
+						_react2.default.createElement('i', { className: 'fa fa-newspaper-o', 'aria-hidden': 'true' }),
+						'All Items'
+					)
+				), _react2.default.createElement(
+					'li',
+					{ key: "starred-items" },
+					_react2.default.createElement(
+						'span',
+						null,
+						_react2.default.createElement('i', { className: 'fa fa-star', 'aria-hidden': 'true' }),
+						'Starred Items'
+					)
+				), _react2.default.createElement(
+					'li',
+					{ key: "categorized" },
+					_react2.default.createElement(
+						'span',
+						null,
+						_react2.default.createElement('i', { className: 'fa fa-address-book', 'aria-hidden': 'true' }),
+						'Categorized'
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'ul',
+							null,
+							categorizedFeeds
+						)
+					)
+				), _react2.default.createElement(
+					'li',
+					{ key: "Uncategorized" },
+					_react2.default.createElement(
+						'span',
+						null,
+						_react2.default.createElement('i', { className: 'fa fa-address-card', 'aria-hidden': 'true' }),
+						'Uncategorized'
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'ul',
+							null,
+							unCategorizedFeeds
+						)
+					)
+				)];
+
+				return panelTitrs;
 			}
 		}]);
 
@@ -34317,6 +34431,9 @@
 		_createClass(RightPanel, [{
 			key: 'render',
 			value: function render() {
+				{
+					console.log(this.props);
+				}
 				return _react2.default.createElement(
 					'div',
 					{ id: 'right-panel-container' },
@@ -34324,7 +34441,7 @@
 						'div',
 						{ className: 'fluid-container' },
 						_react2.default.createElement(_rightTopMenu2.default, { src: 'http://localhost:8000/assets/images' }),
-						_react2.default.createElement(_rightContent2.default, null)
+						_react2.default.createElement(_rightContent2.default, { feed: this.props.feed, unsub: this.props.unsub })
 					)
 				);
 			}
@@ -34504,6 +34621,8 @@
 	  _createClass(RightContent, [{
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'row', id: 'feed-container' },
@@ -34520,7 +34639,7 @@
 	              _react2.default.createElement(
 	                'span',
 	                { id: 'title' },
-	                'IT News - Zoomit Feed'
+	                this.props.feed['name']
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -34528,7 +34647,9 @@
 	              { className: 'feed-header-right-container' },
 	              _react2.default.createElement(
 	                'button',
-	                { className: 'feed-header-right-btn' },
+	                { className: 'feed-header-right-btn', onClick: function onClick() {
+	                    return _this2.props.unsub(_this2.props.feed.id);
+	                  } },
 	                'Unsubscribe'
 	              ),
 	              _react2.default.createElement(
@@ -34557,7 +34678,7 @@
 	      var articles = this._getReqFeedArticles();
 
 	      return articles.map(function (article) {
-	        return _react2.default.createElement(_feedArticle2.default, { value: article });
+	        return _react2.default.createElement(_feedArticle2.default, { key: article.key, value: article });
 	      });
 	    }
 	  }, {
@@ -34567,7 +34688,7 @@
 	      // va emkan dare ke function varible vorodi masalan "Feeed name" dashte bashe
 
 
-	      var articles = [{ feed: 'ZoomiIT', title: 'Article 1', descp: 'This is Article 1 , And Article is about everything that you can think', date: '10:40PM', img: 'http://cdn01.zoomit.ir/2017/3/01b5487f-44cf-42be-bc74-5c38c4189356.jpg' }, { feed: 'ZoomiIT', title: 'Article 2', descp: 'This is Article 2 , And Article is about everything that you can think', date: '10:40PM', img: 'https://tctechcrunch2011.files.wordpress.com/2017/03/gold-iphone-shot1.png?w=680' }, { feed: 'ZoomiIT', title: 'Article 3', descp: 'This is Article 3 , And Article is about everything that you can think', date: '10:40PM', img: 'https://tctechcrunch2011.files.wordpress.com/2016/09/4715498386_3bf830783c_b.jpg?w=680' }, { feed: 'ZoomiIT', title: 'Article 4', descp: 'This is Article 4 , And Article is about everything that you can think', date: '10:40PM', img: 'https://tctechcrunch2011.files.wordpress.com/2017/03/jl-2.png?w=680' }, { feed: 'ZoomiIT', title: 'Article 5', descp: 'This is Article 5 , And Article is about everything that you can think', date: '10:40PM', img: 'https://tctechcrunch2011.files.wordpress.com/2017/03/10_matternet_m2_drone_lugano_switzerland.jpg?w=680' }];
+	      var articles = [{ key: 'artc-1', feed: 'ZoomiIT', title: 'Article 1', descp: 'This is Article 1 , And Article is about everything that you can think', date: '10:40PM', img: 'http://cdn01.zoomit.ir/2017/3/01b5487f-44cf-42be-bc74-5c38c4189356.jpg' }, { key: 'artc-2', feed: 'ZoomiIT', title: 'Article 2', descp: 'This is Article 2 , And Article is about everything that you can think', date: '10:40PM', img: 'https://tctechcrunch2011.files.wordpress.com/2017/03/gold-iphone-shot1.png?w=680' }, { key: 'artc-3', feed: 'ZoomiIT', title: 'Article 3', descp: 'This is Article 3 , And Article is about everything that you can think', date: '10:40PM', img: 'https://tctechcrunch2011.files.wordpress.com/2016/09/4715498386_3bf830783c_b.jpg?w=680' }, { key: 'artc-4', feed: 'ZoomiIT', title: 'Article 4', descp: 'This is Article 4 , And Article is about everything that you can think', date: '10:40PM', img: 'https://tctechcrunch2011.files.wordpress.com/2017/03/jl-2.png?w=680' }, { key: 'artc-5', feed: 'ZoomiIT', title: 'Article 5', descp: 'This is Article 5 , And Article is about everything that you can think', date: '10:40PM', img: 'https://tctechcrunch2011.files.wordpress.com/2017/03/10_matternet_m2_drone_lugano_switzerland.jpg?w=680' }];
 
 	      return articles;
 	    }
