@@ -46,7 +46,7 @@ export default class RightContent extends React.Component {
     // felan chon feed haye mokhtalef nadarim, nemitonim request vagheyi bedim
     // va emkan dare ke function varible vorodi masalan "Feeed name" dashte bashe
 
-
+    
     const articles = [
       { key : 'artc-1', feed : 'ZoomiIT' ,title : 'Article 1', descp : 'This is Article 1 , And Article is about everything that you can think', date : '10:40PM', img : 'http://cdn01.zoomit.ir/2017/3/01b5487f-44cf-42be-bc74-5c38c4189356.jpg'},
       { key : 'artc-2', feed : 'ZoomiIT' ,title : 'Article 2', descp : 'This is Article 2 , And Article is about everything that you can think', date : '10:40PM', img : 'https://tctechcrunch2011.files.wordpress.com/2017/03/gold-iphone-shot1.png?w=680'},
