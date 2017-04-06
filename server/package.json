@@ -20,6 +20,7 @@
     "express": "^4.15.2",
     "feed-read": "0.0.1",
     "nodemon": "^1.11.0",
+    "redis": "^2.7.1",
     "rss-finder": "^2.0.3"
   }
 }

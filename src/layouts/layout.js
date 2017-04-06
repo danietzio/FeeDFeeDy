@@ -19,11 +19,7 @@ export default class Layout extends React.Component {
 
 	componentWillMount() {
 			this.state = {
-				feeds : [
-							{ id : '1' , icon : 'circle-o', name : 'ZoomIT' , link : 'https://www.entrepreneur.com', categorized : false , category : '' , starred : false },
-							{ id : '2' , icon : 'circle-o', name : 'Techrunch', link : 'https://www.techcrunch.com', categorized : false , category : '', starred : false},
-							{ id : '3' , icon : 'circle-o', name : 'GeekWire' , link : 'https://www.geekwire.com' , categorized : false , category : '', starred : false}
-				],
+				feeds : [],
 				defaultFeedId : 2
 			};
 	}
