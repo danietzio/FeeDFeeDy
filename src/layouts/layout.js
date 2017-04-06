@@ -20,11 +20,11 @@ export default class Layout extends React.Component {
 	componentWillMount() {
 			this.state = {
 				feeds : [
-							{ id : '1' , icon : 'circle-o', name : 'ZoomIT' , link : '#', categorized : false , category : '' , starred : false },
-							{ id : '2' , icon : 'circle-o', name : 'Techrunch', link : '#', categorized : false , category : '', starred : false},
-							{ id : '3' , icon : 'circle-o', name : 'IT News' , link : '#' , categorized : false , category : '', starred : false}
+							{ id : '1' , icon : 'circle-o', name : 'ZoomIT' , link : 'http://www.zoomit.com', categorized : false , category : '' , starred : false },
+							{ id : '2' , icon : 'circle-o', name : 'Techrunch', link : 'https://www.techcrunch.com', categorized : false , category : '', starred : false},
+							{ id : '3' , icon : 'circle-o', name : 'GeekWire' , link : 'https://www.geekwire.com' , categorized : false , category : '', starred : false}
 				],
-				defaultFeedId : 1
+				defaultFeedId :2
 			};
 	}
 

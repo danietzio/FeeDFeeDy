@@ -11,16 +11,16 @@ export default class Article extends React.Component {
       <article>
         <div className="article-container">
           <div className="article-title-container">
-            <span className="column-description">{this.props.value.feed}</span>
+            <span className="column-description">{this.props.value.feed.name}</span>
           </div>
           <div className="article-data-container">
             <span className="column-description article-data-description">
               <span>{this.props.value.title}</span>
-              <span>{this.props.value.descp}</span>
+              <span>{this.props.value.content}</span>
             </span>
           </div>
           <div className="article-metadata-container">
-            <span className="column-description"> {this.props.value.date}</span>
+            <span className="column-description"> {this.props.value.published}</span>
           </div>
           <div className="article-actions-container">
             <span className="column-description">
@@ -37,7 +37,7 @@ export default class Article extends React.Component {
           </div>
           <div  className="article-expand-descp">
             <span>
-               {this.props.value.descp}
+               {this.props.value.content}
             </span>
           </div>
         </div>

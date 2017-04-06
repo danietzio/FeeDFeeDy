@@ -31381,8 +31381,8 @@
 			key: 'componentWillMount',
 			value: function componentWillMount() {
 				this.state = {
-					feeds: [{ id: '1', icon: 'circle-o', name: 'ZoomIT', link: '#', categorized: false, category: '', starred: false }, { id: '2', icon: 'circle-o', name: 'Techrunch', link: '#', categorized: false, category: '', starred: false }, { id: '3', icon: 'circle-o', name: 'IT News', link: '#', categorized: false, category: '', starred: false }],
-					defaultFeedId: 1
+					feeds: [{ id: '1', icon: 'circle-o', name: 'ZoomIT', link: 'http://www.zoomit.com', categorized: false, category: '', starred: false }, { id: '2', icon: 'circle-o', name: 'Techrunch', link: 'https://www.techcrunch.com', categorized: false, category: '', starred: false }, { id: '3', icon: 'circle-o', name: 'GeekWire', link: 'https://www.geekwire.com', categorized: false, category: '', starred: false }],
+					defaultFeedId: 2
 				};
 			}
 		}, {
@@ -34596,6 +34596,10 @@
 
 	var _feedArticle2 = _interopRequireDefault(_feedArticle);
 
+	var _jquery = __webpack_require__(178);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
 	__webpack_require__(204);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -34615,10 +34619,19 @@
 	    var _this = _possibleConstructorReturn(this, (RightContent.__proto__ || Object.getPrototypeOf(RightContent)).call(this));
 
 	    _this._getComments = _this._getComments.bind(_this);
+
+	    _this.state = {
+	      articles: []
+	    };
 	    return _this;
 	  }
 
 	  _createClass(RightContent, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      this._getComments();
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
@@ -34667,7 +34680,7 @@
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'row feed-content-container' },
-	            this._getComments()
+	            this.state.articles
 	          )
 	        )
 	      );
@@ -34675,22 +34688,40 @@
 	  }, {
 	    key: '_getComments',
 	    value: function _getComments() {
-	      var articles = this._getReqFeedArticles();
+	      var _this3 = this;
 
-	      return articles.map(function (article) {
-	        return _react2.default.createElement(_feedArticle2.default, { key: article.key, value: article });
+	      var articlesTag = [];
+
+	      this._getReqFeedArticles(this.props.feed['link']).then(function (articles) {
+	        console.log("HIHIHIHHIHHI");
+	        for (var article in articles) {
+	          articlesTag.push(_react2.default.createElement(_feedArticle2.default, { value: articles[article] }));
+	        }
+	        _this3.setState({ articles: articlesTag });
+	      }).catch(function (err) {
+	        console.log(err);
+	        return err;
 	      });
 	    }
 	  }, {
 	    key: '_getReqFeedArticles',
-	    value: function _getReqFeedArticles() {
-	      // felan chon feed haye mokhtalef nadarim, nemitonim request vagheyi bedim
-	      // va emkan dare ke function varible vorodi masalan "Feeed name" dashte bashe
+	    value: function _getReqFeedArticles(url) {
+	      var decodedUrl = encodeURIComponent(url);
 
+	      return new Promise(function (resolve, reject) {
 
-	      var articles = [{ key: 'artc-1', feed: 'ZoomiIT', title: 'Article 1', descp: 'This is Article 1 , And Article is about everything that you can think', date: '10:40PM', img: 'http://cdn01.zoomit.ir/2017/3/01b5487f-44cf-42be-bc74-5c38c4189356.jpg' }, { key: 'artc-2', feed: 'ZoomiIT', title: 'Article 2', descp: 'This is Article 2 , And Article is about everything that you can think', date: '10:40PM', img: 'https://tctechcrunch2011.files.wordpress.com/2017/03/gold-iphone-shot1.png?w=680' }, { key: 'artc-3', feed: 'ZoomiIT', title: 'Article 3', descp: 'This is Article 3 , And Article is about everything that you can think', date: '10:40PM', img: 'https://tctechcrunch2011.files.wordpress.com/2016/09/4715498386_3bf830783c_b.jpg?w=680' }, { key: 'artc-4', feed: 'ZoomiIT', title: 'Article 4', descp: 'This is Article 4 , And Article is about everything that you can think', date: '10:40PM', img: 'https://tctechcrunch2011.files.wordpress.com/2017/03/jl-2.png?w=680' }, { key: 'artc-5', feed: 'ZoomiIT', title: 'Article 5', descp: 'This is Article 5 , And Article is about everything that you can think', date: '10:40PM', img: 'https://tctechcrunch2011.files.wordpress.com/2017/03/10_matternet_m2_drone_lugano_switzerland.jpg?w=680' }];
-
-	      return articles;
+	        _jquery2.default.ajax({
+	          type: 'GET',
+	          url: 'http://localhost:8080/feed/' + decodedUrl,
+	          data: ''
+	        }).error(function (err) {
+	          console.log('error Occuered', err);
+	          reject(err);
+	        }).success(function (data) {
+	          console.log('Data Recieved', data);
+	          resolve(data);
+	        });
+	      });
 	    }
 	  }]);
 
@@ -34749,7 +34780,7 @@
 	            _react2.default.createElement(
 	              'span',
 	              { className: 'column-description' },
-	              this.props.value.feed
+	              this.props.value.feed.name
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -34766,7 +34797,7 @@
 	              _react2.default.createElement(
 	                'span',
 	                null,
-	                this.props.value.descp
+	                this.props.value.content
 	              )
 	            )
 	          ),
@@ -34777,7 +34808,7 @@
 	              'span',
 	              { className: 'column-description' },
 	              ' ',
-	              this.props.value.date
+	              this.props.value.published
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -34825,7 +34856,7 @@
 	            _react2.default.createElement(
 	              'span',
 	              null,
-	              this.props.value.descp
+	              this.props.value.content
 	            )
 	          )
 	        )

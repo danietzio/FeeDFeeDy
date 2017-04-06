@@ -1,6 +1,6 @@
 import React from 'react';
 import Article from '../components/feed-article.js';
-
+import $ from 'jquery';
 import '../styles/right-content.css';
 
 export default class RightContent extends React.Component {
@@ -8,6 +8,14 @@ export default class RightContent extends React.Component {
     super();
 
     this._getComments = this._getComments.bind(this);
+
+    this.state = {
+      articles : []
+    };
+  }
+
+  componentWillMount() {
+    this._getComments();
   }
 
   render() {
@@ -27,7 +35,7 @@ export default class RightContent extends React.Component {
             </div>
           </div>
           <div className="row feed-content-container">
-              { this._getComments() }
+              { this.state.articles }
           </div>
         </div>
       </div>
@@ -35,28 +43,40 @@ export default class RightContent extends React.Component {
   }
 
   _getComments() {
-    const articles = this._getReqFeedArticles();
+    const articlesTag = [];
 
-    return articles.map((article) => {
-      return <Article key = { article.key} value= { article } />
+    this._getReqFeedArticles(this.props.feed['link'])
+        .then((articles) => {
+          console.log("HIHIHIHHIHHI");
+          for(var article in articles) {
+            articlesTag.push(<Article value= { articles[article] } />);
+          }
+          this.setState({ articles : articlesTag })
+        })
+        .catch((err) => {
+          console.log(err);
+          return err;
+        });
+  }
+
+  _getReqFeedArticles(url) {
+    const decodedUrl = encodeURIComponent(url);
+
+    return new Promise(function(resolve, reject) {
+
+      $.ajax({
+        type : 'GET',
+        url : `http://localhost:8080/feed/${decodedUrl}`,
+        data : ''
+      }).error( (err) => {
+            console.log('error Occuered', err);
+            reject(err);
+          })
+          .success( (data) => {
+            console.log('Data Recieved', data);
+            resolve(data)
+          });
+
     });
   }
-
-  _getReqFeedArticles() {
-    // felan chon feed haye mokhtalef nadarim, nemitonim request vagheyi bedim
-    // va emkan dare ke function varible vorodi masalan "Feeed name" dashte bashe
-
-    
-    const articles = [
-      { key : 'artc-1', feed : 'ZoomiIT' ,title : 'Article 1', descp : 'This is Article 1 , And Article is about everything that you can think', date : '10:40PM', img : 'http://cdn01.zoomit.ir/2017/3/01b5487f-44cf-42be-bc74-5c38c4189356.jpg'},
-      { key : 'artc-2', feed : 'ZoomiIT' ,title : 'Article 2', descp : 'This is Article 2 , And Article is about everything that you can think', date : '10:40PM', img : 'https://tctechcrunch2011.files.wordpress.com/2017/03/gold-iphone-shot1.png?w=680'},
-      { key : 'artc-3', feed : 'ZoomiIT' ,title : 'Article 3', descp : 'This is Article 3 , And Article is about everything that you can think', date : '10:40PM', img : 'https://tctechcrunch2011.files.wordpress.com/2016/09/4715498386_3bf830783c_b.jpg?w=680'},
-      { key : 'artc-4', feed : 'ZoomiIT' ,title : 'Article 4', descp : 'This is Article 4 , And Article is about everything that you can think', date : '10:40PM', img : 'https://tctechcrunch2011.files.wordpress.com/2017/03/jl-2.png?w=680'},
-      { key : 'artc-5', feed : 'ZoomiIT' ,title : 'Article 5', descp : 'This is Article 5 , And Article is about everything that you can think', date : '10:40PM', img : 'https://tctechcrunch2011.files.wordpress.com/2017/03/10_matternet_m2_drone_lugano_switzerland.jpg?w=680'},
-    ];
-
-    return articles;
-  }
-
-
 }

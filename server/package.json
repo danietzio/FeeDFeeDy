@@ -18,6 +18,8 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
-    "nodemon": "^1.11.0"
+    "feed-read": "0.0.1",
+    "nodemon": "^1.11.0",
+    "rss-finder": "^2.0.3"
   }
 }
