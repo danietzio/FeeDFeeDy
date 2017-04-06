@@ -29,7 +29,7 @@ app.get('/feed/:name', urlEncoder, (req, res, next) => {
           res.status(200).json(feedContentData);
         })
         .catch((err) => {
-          console.log(err)
+          console.log(err);
           res.status(404).json(error : err);
         });
     })
@@ -43,7 +43,6 @@ function _getFeedData(url) {
       feed(url, (err, articles) => {
         if(err) {
           reject("We Couldn't Find Feed Contents!");
-          return;
         }
         resolve(articles);
       });

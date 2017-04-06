@@ -2,3 +2,5 @@
 2 - tooye function getFeeds baraye uncategorized va ,,, subfiled dorost konam
 3 - bad az etmame project hatman kolle course React ro az aval negah konam va moshkeltam ro raf konam
 4 - bayad tooye function _getFeeds tooye layout.js , be jaye un az GET request estefade konam va dar soorate taghir biam va this.state.feeds ro taghir bedam
+5 - vaghti miaim va src haye image haro peyda mikonim , mitonim image src set ro peyda konim va baraye harkodom az andaze haye safhe yek image bezarim
+6- bayad function bandi konam, masalan inke miam va description marboot be feed ro parse mikonam va ... ro bayad functionesh konam

@@ -8,6 +8,7 @@ export default class Category extends React.Component {
 		super();
 
 	}
+
 	render() {
 		const list = this._getComments();
 		return(

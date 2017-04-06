@@ -31381,7 +31381,7 @@
 			key: 'componentWillMount',
 			value: function componentWillMount() {
 				this.state = {
-					feeds: [{ id: '1', icon: 'circle-o', name: 'ZoomIT', link: 'http://www.zoomit.com', categorized: false, category: '', starred: false }, { id: '2', icon: 'circle-o', name: 'Techrunch', link: 'https://www.techcrunch.com', categorized: false, category: '', starred: false }, { id: '3', icon: 'circle-o', name: 'GeekWire', link: 'https://www.geekwire.com', categorized: false, category: '', starred: false }],
+					feeds: [{ id: '1', icon: 'circle-o', name: 'ZoomIT', link: 'https://www.entrepreneur.com', categorized: false, category: '', starred: false }, { id: '2', icon: 'circle-o', name: 'Techrunch', link: 'https://www.techcrunch.com', categorized: false, category: '', starred: false }, { id: '3', icon: 'circle-o', name: 'GeekWire', link: 'https://www.geekwire.com', categorized: false, category: '', starred: false }],
 					defaultFeedId: 2
 				};
 			}
@@ -31395,18 +31395,6 @@
 					_react2.default.createElement(_leftPanel2.default, { feeds: this.state.feeds, changeFeed: this._changeFeed }),
 					_react2.default.createElement(_rightPanel2.default, { feed: feed, unsub: this._unSubscribe })
 				);
-			}
-
-			//Get Information Of Current User Feeds
-
-		}, {
-			key: '_getFeeds',
-			value: function _getFeeds() {
-
-				// inja miaim va feed haro load mikonim
-				// inja bayad bejaye tarife local , az GET request estefade konim
-
-				return this.state.feeds;
 			}
 
 			// Get Feed by id
@@ -34610,6 +34598,8 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var token = false;
+
 	var RightContent = function (_React$Component) {
 	  _inherits(RightContent, _React$Component);
 
@@ -34618,18 +34608,19 @@
 
 	    var _this = _possibleConstructorReturn(this, (RightContent.__proto__ || Object.getPrototypeOf(RightContent)).call(this));
 
-	    _this._getComments = _this._getComments.bind(_this);
+	    _this._setDataTempelate = _this._setDataTempelate.bind(_this);
 
-	    _this.state = {
-	      articles: []
-	    };
 	    return _this;
 	  }
 
 	  _createClass(RightContent, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-	      this._getComments();
+	      this.state = {
+	        articles: []
+	      };
+
+	      this._getReqFeedArticles(this.props.feed['link']);
 	    }
 	  }, {
 	    key: 'render',
@@ -34686,41 +34677,90 @@
 	      );
 	    }
 	  }, {
-	    key: '_getComments',
-	    value: function _getComments() {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
 	      var _this3 = this;
 
-	      var articlesTag = [];
-
-	      this._getReqFeedArticles(this.props.feed['link']).then(function (articles) {
-	        console.log("HIHIHIHHIHHI");
-	        for (var article in articles) {
-	          articlesTag.push(_react2.default.createElement(_feedArticle2.default, { value: articles[article] }));
+	      setInterval(function () {
+	        if (!token) {
+	          token = true;
+	          _this3._getReqFeedArticles(_this3.props.feed['link']);
 	        }
-	        _this3.setState({ articles: articlesTag });
-	      }).catch(function (err) {
-	        console.log(err);
-	        return err;
+	      }, 4000);
+	    }
+	  }, {
+	    key: '_setDataTempelate',
+	    value: function _setDataTempelate(articles) {
+	      var articlesTag = [];
+	      for (var i in articles) {
+	        var article = articles[i];
+
+	        // Making Article data Clear
+	        // Removing Extra tags from description
+	        var contentStr = article.content;
+
+	        // finding images src
+	        var tempDiv = document.createElement('div');
+	        tempDiv.innerHTML = contentStr;
+
+	        var tempData = (0, _jquery2.default)(tempDiv).text();
+
+	        var tempImgSrc = tempDiv.querySelector('img');
+	        tempImgSrc = tempImgSrc && tempImgSrc.getAttribute('src');
+
+	        // inja mitonim "srcSet" ro ham be dast birarim va responsive tar dorost konim.
+	        // Removing query parametrs from image links
+	        tempImgSrc = tempImgSrc && tempImgSrc.split("?")[0];
+
+	        // Converting Date String To Correct syntax
+	        var tempDate = new Date(article.published);
+	        var todayDate = new Date();
+	        var yesterdayDate = new Date(todayDate.setDate(todayDate.getDate() - 1));
+	        var tempDateStr = "";
+	        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+	        // reinitilizing the today date
+	        todayDate = new Date();
+
+	        if (tempDate.setHours(0, 0, 0, 0) == todayDate.setHours(0, 0, 0, 0)) {
+	          tempDateStr = "Today";
+	        } else if (tempDate.setHours(0, 0, 0, 0) == yesterdayDate.setHours(0, 0, 0, 0)) {
+	          tempDateStr = "Yesterday";
+	        } else {
+	          tempDateStr = monthNames[tempDate.getMonth()].toString() + " " + tempDate.getDay().toString();
+	        }
+
+	        // Creating new properties for each feed content
+	        article.descp = tempData;
+	        article.imgSrc = tempImgSrc;
+	        article.newDate = tempDateStr;
+
+	        articlesTag.push(_react2.default.createElement(_feedArticle2.default, { value: articles[i] }));
+	      }
+
+	      this.setState({
+	        articles: articlesTag
 	      });
 	    }
 	  }, {
 	    key: '_getReqFeedArticles',
 	    value: function _getReqFeedArticles(url) {
+	      var _this4 = this;
+
+	      console.log(url);
 	      var decodedUrl = encodeURIComponent(url);
 
-	      return new Promise(function (resolve, reject) {
-
-	        _jquery2.default.ajax({
-	          type: 'GET',
-	          url: 'http://localhost:8080/feed/' + decodedUrl,
-	          data: ''
-	        }).error(function (err) {
-	          console.log('error Occuered', err);
-	          reject(err);
-	        }).success(function (data) {
-	          console.log('Data Recieved', data);
-	          resolve(data);
-	        });
+	      _jquery2.default.ajax({
+	        type: 'GET',
+	        url: 'http://localhost:8080/feed/' + decodedUrl,
+	        data: ''
+	      }).error(function (err) {
+	        console.log('error Occuered', err);
+	        token = false;
+	      }).success(function (data) {
+	        console.log('Data Recieved', data);
+	        _this4._setDataTempelate(data);
+	        token = false;
 	      });
 	    }
 	  }]);
@@ -34797,7 +34837,7 @@
 	              _react2.default.createElement(
 	                'span',
 	                null,
-	                this.props.value.content
+	                this.props.value.descp
 	              )
 	            )
 	          ),
@@ -34808,7 +34848,7 @@
 	              'span',
 	              { className: 'column-description' },
 	              ' ',
-	              this.props.value.published
+	              this.props.value.newDate
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -34848,7 +34888,7 @@
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'article-image-container' },
-	            _react2.default.createElement('img', { src: this.props.value.img })
+	            _react2.default.createElement('img', { src: this.props.value.imgSrc })
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -34856,7 +34896,7 @@
 	            _react2.default.createElement(
 	              'span',
 	              null,
-	              this.props.value.content
+	              this.props.value.descp
 	            )
 	          )
 	        )

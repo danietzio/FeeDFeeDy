@@ -1,4 +1,5 @@
 import React from 'react';
+
 import '../styles/feed-article.css';
 
 export default class Article extends React.Component {
@@ -16,11 +17,11 @@ export default class Article extends React.Component {
           <div className="article-data-container">
             <span className="column-description article-data-description">
               <span>{this.props.value.title}</span>
-              <span>{this.props.value.content}</span>
+              <span>{this.props.value.descp}</span>
             </span>
           </div>
           <div className="article-metadata-container">
-            <span className="column-description"> {this.props.value.published}</span>
+            <span className="column-description"> {this.props.value.newDate}</span>
           </div>
           <div className="article-actions-container">
             <span className="column-description">
@@ -33,11 +34,11 @@ export default class Article extends React.Component {
         <div className="article-expand-container">
           <h1> {this.props.value.title} </h1>
           <div className="article-image-container">
-            <img src={this.props.value.img} />
+            <img src={this.props.value.imgSrc} />
           </div>
           <div  className="article-expand-descp">
             <span>
-               {this.props.value.content}
+               { this.props.value.descp }
             </span>
           </div>
         </div>
