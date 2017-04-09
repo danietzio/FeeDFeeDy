@@ -1,5 +1,5 @@
 import  express  from 'express';
-import  client from './lib/redis.js';
+import  {client} from './lib/redis.js';
 
 // Body parser intilization
 import bodyParser from 'body-parser';
@@ -28,13 +28,14 @@ let urlEncoder = bodyParser.urlencoded({
 
 // GET request for sending
 app.get('/feeds', urlEncoder, (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     client.lrange('feeds', 0, -1, (err, chunks) => {
         if(err) {
           res.status(404).json({ error: true, data: "Not Founded!"});
         }
-        
+
         // Sending all of the user subscribed feeds
-        res.status(200).json({error : false, data: chunks});
+        res.status(200).json({error : false, data: chunks[0]} );
     });
 });
 

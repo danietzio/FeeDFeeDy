@@ -19,7 +19,7 @@ export default class Category extends React.Component {
 	_getComments() {
 		// get all of the feeds
 		const  categories = this.props.feeds;
-
+		
 		// Categorized Items
 		let categorizedFeeds = categories.filter((value) => {
 			return value.categorized;

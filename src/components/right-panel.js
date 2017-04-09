@@ -7,7 +7,6 @@ import '../styles/right-panel.css';
 
 export default class RightPanel extends React.Component {
 	render() {
-		{ console.log(this.props)}
 		return(
       <div id="right-panel-container">
 					<div className="fluid-container">

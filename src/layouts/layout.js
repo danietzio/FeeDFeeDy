@@ -1,4 +1,6 @@
 import React from 'react';
+import $ from 'jquery';
+
 import LeftPanel from '../components/left-panel.js';
 import RightPanel from '../components/right-panel.js';
 
@@ -15,33 +17,81 @@ export default class Layout extends React.Component {
 
 		// binding This to Unsubscribe Function
 		this._unSubscribe = this._unSubscribe.bind(this);
+
 	}
 
 	componentWillMount() {
 			this.state = {
-				feeds : [],
-				defaultFeedId : 2
-			};
+				defaultFeedId : 1,
+				feeds : []
+			}
 	}
 
 	render() {
-		const feed = this._getFeedByID( this.state.defaultFeedId );
+		const feeds = this.state ? this.state.feeds : [];
+		const feed = this.state ?  this._getFeedByID( this.state.defaultFeedId ) : { };
+
 		return(
 			<div className="fluid-container">
-					<LeftPanel feeds = { this.state.feeds } changeFeed = { this._changeFeed }></LeftPanel>
+					<LeftPanel feeds = { feeds } changeFeed = { this._changeFeed }></LeftPanel>
 					<RightPanel feed = { feed } unsub = { this._unSubscribe }></RightPanel>
 			</div>
 		);
+	}
+
+	componentDidMount() {
+			setInterval(() => {
+				this._fetchAllFeeds()
+					.then((chunks) => {
+							this.setState({
+								defaultFeedId : 1,
+								feeds : chunks
+							});
+				}).catch((err) => {
+					if(err.message == "Not Founded")  {
+						this.setState({
+							defaultFeedId : 1,
+							feeds : []
+						});
+					}
+					else {
+						console.log(err);
+						throw err;
+					}
+				});
+			}, 4000);
+	}
+
+	// Get all Feeds from server
+	_fetchAllFeeds() {
+			return  new Promise((resolve, reject) => {
+
+				// Sending Request To get all of the feeds
+				$.ajax({
+					type : 'GET',
+		      url : `http://localhost:3000/feeds`,
+		      data : ''
+				})
+					.error((err) => {
+						 if(err) reject(new Error("Request Error"));
+					})
+					.success((chunk) => {
+						if(chunk.error) {
+							reject(new Error("Not Founded"));
+						}
+						resolve(JSON.parse(chunk.data));
+					})
+			});
 	}
 
 	// Get Feed by id
 	_getFeedByID(id) {
 
 		// Get Information Of all Feeds
-		const feeds = this.state.feeds;
+		const feeds = this.state && this.state.feeds;
 
 		// find feed by given id
-		const feed = feeds[id - 1];
+		const feed = feeds && feeds[id - 1];
 
 		//returning Specified feed's Information
 		return feed;
@@ -54,11 +104,12 @@ export default class Layout extends React.Component {
 
 	// unsubscribe feed by ID
 	_unSubscribe(id) {
-		const temp = this.state.feeds;
-		temp.splice(id,1);
-
-		this.setState({
-			feeds : temp
-		});
+		const temp = this.state && this.state.feeds;
+		if(temp) {
+				temp.splice(id,1);
+				this.setState({
+					feeds : temp
+				});
+		}
 	}
 }

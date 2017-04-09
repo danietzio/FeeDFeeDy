@@ -18,7 +18,9 @@ export default class RightContent extends React.Component {
       articles : []
     }
 
-    this._getReqFeedArticles(this.props.feed['link']);
+    if(Object.keys(this.props.feed || {}).length !== 0 && this.props.feed.constructor === Object) {
+      this._getReqFeedArticles(this.props.feed['link']);
+    }
   }
 
   render() {
@@ -28,7 +30,7 @@ export default class RightContent extends React.Component {
           <div className="feed-header-container">
             <div className="feed-header-left-container">
               <i className="fa fa-newspaper-o" aria-hidden="true"></i>
-                <span id="title">{ this.props.feed['name'] }</span>
+                <span id="title">{ this.props.feed && this.props.feed['name'] }</span>
             </div>
             <div className="feed-header-right-container">
               <button className="feed-header-right-btn" onClick = { () => this.props.unsub(this.props.feed.id) }>Unsubscribe</button>
@@ -37,7 +39,7 @@ export default class RightContent extends React.Component {
             </div>
           </div>
           <div className="row feed-content-container">
-              { this.state.articles }
+              { this.state && this.state.articles }
           </div>
         </div>
       </div>
@@ -49,14 +51,16 @@ export default class RightContent extends React.Component {
     setInterval( () => {
       if(!token) {
         token = true;
-        this._getReqFeedArticles(this.props.feed['link']);
+        if(Object.keys(this.props.feed || {}).length !== 0 && this.props.feed.constructor === Object) {
+          this._getReqFeedArticles(this.props.feed['link']);
+        }
       }
     },4000);
 
   }
 
   _setDataTempelate(articles) {
-    let articlesTag = [];
+    const articlesTag = [];
     for(var i in articles) {
       const article = articles[i];
 
@@ -119,7 +123,7 @@ export default class RightContent extends React.Component {
 
     $.ajax({
       type : 'GET',
-      url : `http://localhost:8080/feed/${decodedUrl}`,
+      url : `http://localhost:3000/feed/${decodedUrl}`,
       data : ''
     }).error( (err) => {
           console.log('error Occuered', err);

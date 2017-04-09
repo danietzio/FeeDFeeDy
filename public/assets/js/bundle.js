@@ -31340,6 +31340,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _jquery = __webpack_require__(178);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
 	var _leftPanel = __webpack_require__(180);
 
 	var _leftPanel2 = _interopRequireDefault(_leftPanel);
@@ -31374,6 +31378,7 @@
 
 			// binding This to Unsubscribe Function
 			_this._unSubscribe = _this._unSubscribe.bind(_this);
+
 			return _this;
 		}
 
@@ -31381,20 +31386,69 @@
 			key: 'componentWillMount',
 			value: function componentWillMount() {
 				this.state = {
-					feeds: [],
-					defaultFeedId: 2
+					defaultFeedId: 1,
+					feeds: []
 				};
 			}
 		}, {
 			key: 'render',
 			value: function render() {
-				var feed = this._getFeedByID(this.state.defaultFeedId);
+				var feeds = this.state ? this.state.feeds : [];
+				var feed = this.state ? this._getFeedByID(this.state.defaultFeedId) : {};
+
 				return _react2.default.createElement(
 					'div',
 					{ className: 'fluid-container' },
-					_react2.default.createElement(_leftPanel2.default, { feeds: this.state.feeds, changeFeed: this._changeFeed }),
+					_react2.default.createElement(_leftPanel2.default, { feeds: feeds, changeFeed: this._changeFeed }),
 					_react2.default.createElement(_rightPanel2.default, { feed: feed, unsub: this._unSubscribe })
 				);
+			}
+		}, {
+			key: 'componentDidMount',
+			value: function componentDidMount() {
+				var _this2 = this;
+
+				setInterval(function () {
+					_this2._fetchAllFeeds().then(function (chunks) {
+						_this2.setState({
+							defaultFeedId: 1,
+							feeds: chunks
+						});
+					}).catch(function (err) {
+						if (err.message == "Not Founded") {
+							_this2.setState({
+								defaultFeedId: 1,
+								feeds: []
+							});
+						} else {
+							console.log(err);
+							throw err;
+						}
+					});
+				}, 4000);
+			}
+
+			// Get all Feeds from server
+
+		}, {
+			key: '_fetchAllFeeds',
+			value: function _fetchAllFeeds() {
+				return new Promise(function (resolve, reject) {
+
+					// Sending Request To get all of the feeds
+					_jquery2.default.ajax({
+						type: 'GET',
+						url: 'http://localhost:3000/feeds',
+						data: ''
+					}).error(function (err) {
+						if (err) reject(new Error("Request Error"));
+					}).success(function (chunk) {
+						if (chunk.error) {
+							reject(new Error("Not Founded"));
+						}
+						resolve(JSON.parse(chunk.data));
+					});
+				});
 			}
 
 			// Get Feed by id
@@ -31404,10 +31458,10 @@
 			value: function _getFeedByID(id) {
 
 				// Get Information Of all Feeds
-				var feeds = this.state.feeds;
+				var feeds = this.state && this.state.feeds;
 
 				// find feed by given id
-				var feed = feeds[id - 1];
+				var feed = feeds && feeds[id - 1];
 
 				//returning Specified feed's Information
 				return feed;
@@ -31426,12 +31480,13 @@
 		}, {
 			key: '_unSubscribe',
 			value: function _unSubscribe(id) {
-				var temp = this.state.feeds;
-				temp.splice(id, 1);
-
-				this.setState({
-					feeds: temp
-				});
+				var temp = this.state && this.state.feeds;
+				if (temp) {
+					temp.splice(id, 1);
+					this.setState({
+						feeds: temp
+					});
+				}
 			}
 		}]);
 
@@ -34419,9 +34474,6 @@
 		_createClass(RightPanel, [{
 			key: 'render',
 			value: function render() {
-				{
-					console.log(this.props);
-				}
 				return _react2.default.createElement(
 					'div',
 					{ id: 'right-panel-container' },
@@ -34620,7 +34672,9 @@
 	        articles: []
 	      };
 
-	      this._getReqFeedArticles(this.props.feed['link']);
+	      if (Object.keys(this.props.feed || {}).length !== 0 && this.props.feed.constructor === Object) {
+	        this._getReqFeedArticles(this.props.feed['link']);
+	      }
 	    }
 	  }, {
 	    key: 'render',
@@ -34643,7 +34697,7 @@
 	              _react2.default.createElement(
 	                'span',
 	                { id: 'title' },
-	                this.props.feed['name']
+	                this.props.feed && this.props.feed['name']
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -34671,7 +34725,7 @@
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'row feed-content-container' },
-	            this.state.articles
+	            this.state && this.state.articles
 	          )
 	        )
 	      );
@@ -34684,7 +34738,9 @@
 	      setInterval(function () {
 	        if (!token) {
 	          token = true;
-	          _this3._getReqFeedArticles(_this3.props.feed['link']);
+	          if (Object.keys(_this3.props.feed || {}).length !== 0 && _this3.props.feed.constructor === Object) {
+	            _this3._getReqFeedArticles(_this3.props.feed['link']);
+	          }
 	        }
 	      }, 4000);
 	    }
@@ -34752,7 +34808,7 @@
 
 	      _jquery2.default.ajax({
 	        type: 'GET',
-	        url: 'http://localhost:8080/feed/' + decodedUrl,
+	        url: 'http://localhost:3000/feed/' + decodedUrl,
 	        data: ''
 	      }).error(function (err) {
 	        console.log('error Occuered', err);

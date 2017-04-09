@@ -7,5 +7,4 @@ client.on('error', (error) => {
   if(error) throw error;
 });
 
-
-export { clinet };
+export { client };
