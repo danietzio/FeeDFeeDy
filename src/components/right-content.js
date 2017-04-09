@@ -33,7 +33,7 @@ export default class RightContent extends React.Component {
                 <span id="title">{ this.props.feed && this.props.feed['name'] }</span>
             </div>
             <div className="feed-header-right-container">
-              <button className="feed-header-right-btn" onClick = { () => this.props.unsub(this.props.feed.id) }>Unsubscribe</button>
+              <button className="feed-header-right-btn" onClick = { () => { if(this.props.feed) this.props.unsub(this.props.feed.id) } }>Unsubscribe</button>
               <button className="feed-header-right-btn">Show Unread</button>
               <button className="feed-header-right-btn">Mark All As Unread</button>
             </div>
@@ -50,8 +50,8 @@ export default class RightContent extends React.Component {
 
     setInterval( () => {
       if(!token) {
-        token = true;
-        if(Object.keys(this.props.feed || {}).length !== 0 && this.props.feed.constructor === Object) {
+        if(Object.keys(this.props.feed || {}).length !== 0) {
+          token = true;
           this._getReqFeedArticles(this.props.feed['link']);
         }
       }
@@ -123,7 +123,7 @@ export default class RightContent extends React.Component {
 
     $.ajax({
       type : 'GET',
-      url : `http://localhost:3000/feed/${decodedUrl}`,
+      url : `http://localhost:8080/feed/${decodedUrl}`,
       data : ''
     }).error( (err) => {
           console.log('error Occuered', err);

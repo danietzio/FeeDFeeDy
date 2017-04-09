@@ -12,9 +12,9 @@ let app = express();
 
 // intilizing redis client data
 let initFeeds = [
-      { id : '1' , icon : 'circle-o', name : 'ZoomIT' , link : 'https://www.entrepreneur.com', categorized : false , category : '' , starred : false },
-      { id : '2' , icon : 'circle-o', name : 'Techrunch', link : 'https://www.techcrunch.com', categorized : false , category : '', starred : false},
-      { id : '3' , icon : 'circle-o', name : 'GeekWire' , link : 'https://www.geekwire.com' , categorized : false , category : '', starred : false}
+      { id : 1 , icon : 'circle-o', name : 'ZoomIT' , link : 'https://www.entrepreneur.com', categorized : false , category : '' , starred : false },
+      { id : 2 , icon : 'circle-o', name : 'Techrunch', link : 'https://www.techcrunch.com', categorized : false , category : '', starred : false},
+      { id : 3 , icon : 'circle-o', name : 'GeekWire' , link : 'https://www.geekwire.com' , categorized : false , category : '', starred : false}
 ];
 
 client.lpush('feeds', JSON.stringify(initFeeds), (err) => {
@@ -26,9 +26,18 @@ let urlEncoder = bodyParser.urlencoded({
   extended : false
 });
 
+
+// Setting "Access-Control-Allow-Origin" to all responses
+app.use((req, res, next) => {
+  res.set({
+    "Access-Control-Allow-Methods" : "PUT, GET, DELETE",
+    "Access-Control-Allow-Origin" : "*"
+  });
+  next();
+});
+
 // GET request for sending
 app.get('/feeds', urlEncoder, (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
     client.lrange('feeds', 0, -1, (err, chunks) => {
         if(err) {
           res.status(404).json({ error: true, data: "Not Founded!"});
@@ -41,7 +50,6 @@ app.get('/feeds', urlEncoder, (req, res) => {
 
 // GET request for getting feeds by website links
 app.get('/feed/:name', urlEncoder, (req, res) => {
-
   // Decode Website feed url
   let url = decodeURIComponent(req.params.name);
 
@@ -51,7 +59,6 @@ app.get('/feed/:name', urlEncoder, (req, res) => {
 
       _getFeedData(feedLinkData.feedUrls[0].url)
         .then((feedContentData) => {
-          res.setHeader("Access-Control-Allow-Origin", "*");
           res.status(200).json(feedContentData);
         })
         .catch((err) => {
@@ -63,6 +70,26 @@ app.get('/feed/:name', urlEncoder, (req, res) => {
 
 });
 
+// Delete Feed By ID
+app.delete('/feed/:id', urlEncoder, (req, res) => {
+    const id = req.params.id;
+    client.lrange('feeds', 0, -1, (err, chunks) => {
+        let chunk = JSON.parse(chunks[0]);
+        if(err) {
+          res.status(404).json({ error: true, data: "Not Founded!"});
+        }
+
+        const editedArray = chunk.filter((value) => {
+          return value.id != id;
+        });
+
+        console.log(editedArray);
+        client.lpush('feeds', JSON.stringify(editedArray), (err) => {
+          if(err) throw err;
+          res.status(200).json({ error : false, data : editedArray[0].id });
+        })
+    });
+});
 
 function _getFeedData(url) {
   return new Promise(function(resolve, reject) {

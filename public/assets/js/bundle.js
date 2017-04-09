@@ -31411,7 +31411,6 @@
 				setInterval(function () {
 					_this2._fetchAllFeeds().then(function (chunks) {
 						_this2.setState({
-							defaultFeedId: 1,
 							feeds: chunks
 						});
 					}).catch(function (err) {
@@ -31438,7 +31437,7 @@
 					// Sending Request To get all of the feeds
 					_jquery2.default.ajax({
 						type: 'GET',
-						url: 'http://localhost:3000/feeds',
+						url: 'http://localhost:8080/feeds',
 						data: ''
 					}).error(function (err) {
 						if (err) reject(new Error("Request Error"));
@@ -31461,7 +31460,15 @@
 				var feeds = this.state && this.state.feeds;
 
 				// find feed by given id
-				var feed = feeds && feeds[id - 1];
+				var feed = [];
+
+				if (feeds) {
+					feeds.map(function (value) {
+						if (value.id == id) {
+							feed = value;
+						}
+					});
+				}
 
 				//returning Specified feed's Information
 				return feed;
@@ -31480,11 +31487,22 @@
 		}, {
 			key: '_unSubscribe',
 			value: function _unSubscribe(id) {
+				var _this3 = this;
+
 				var temp = this.state && this.state.feeds;
-				if (temp) {
-					temp.splice(id, 1);
-					this.setState({
-						feeds: temp
+				if (temp && confirm("Do you want to unsub " + this.state.feeds[id - 1].name)) {
+					_jquery2.default.ajax({
+						type: 'DELETE',
+						url: 'http://localhost:8080/feed/' + id
+					}).error(function (err) {
+						console.log("We Can't Now UnSub This, Check Your Connections!");
+						throw err;
+					}).success(function (chunk) {
+						temp.splice(id - 1, 1);
+						_this3.setState({
+							defaultFeedId: chunk.data,
+							feeds: temp
+						});
 					});
 				}
 			}
@@ -34706,7 +34724,7 @@
 	              _react2.default.createElement(
 	                'button',
 	                { className: 'feed-header-right-btn', onClick: function onClick() {
-	                    return _this2.props.unsub(_this2.props.feed.id);
+	                    if (_this2.props.feed) _this2.props.unsub(_this2.props.feed.id);
 	                  } },
 	                'Unsubscribe'
 	              ),
@@ -34737,8 +34755,8 @@
 
 	      setInterval(function () {
 	        if (!token) {
-	          token = true;
-	          if (Object.keys(_this3.props.feed || {}).length !== 0 && _this3.props.feed.constructor === Object) {
+	          if (Object.keys(_this3.props.feed || {}).length !== 0) {
+	            token = true;
 	            _this3._getReqFeedArticles(_this3.props.feed['link']);
 	          }
 	        }
@@ -34808,7 +34826,7 @@
 
 	      _jquery2.default.ajax({
 	        type: 'GET',
-	        url: 'http://localhost:3000/feed/' + decodedUrl,
+	        url: 'http://localhost:8080/feed/' + decodedUrl,
 	        data: ''
 	      }).error(function (err) {
 	        console.log('error Occuered', err);

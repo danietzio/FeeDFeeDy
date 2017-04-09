@@ -44,7 +44,6 @@ export default class Layout extends React.Component {
 				this._fetchAllFeeds()
 					.then((chunks) => {
 							this.setState({
-								defaultFeedId : 1,
 								feeds : chunks
 							});
 				}).catch((err) => {
@@ -69,7 +68,7 @@ export default class Layout extends React.Component {
 				// Sending Request To get all of the feeds
 				$.ajax({
 					type : 'GET',
-		      url : `http://localhost:3000/feeds`,
+		      url : `http://localhost:8080/feeds`,
 		      data : ''
 				})
 					.error((err) => {
@@ -89,9 +88,17 @@ export default class Layout extends React.Component {
 
 		// Get Information Of all Feeds
 		const feeds = this.state && this.state.feeds;
-
+		
 		// find feed by given id
-		const feed = feeds && feeds[id - 1];
+		let feed = [];
+
+		if(feeds) {
+			feeds.map((value) => {
+				if(value.id == id) {
+					feed = value;
+				}
+			});
+		}
 
 		//returning Specified feed's Information
 		return feed;
@@ -104,12 +111,24 @@ export default class Layout extends React.Component {
 
 	// unsubscribe feed by ID
 	_unSubscribe(id) {
+
 		const temp = this.state && this.state.feeds;
-		if(temp) {
-				temp.splice(id,1);
-				this.setState({
-					feeds : temp
-				});
+		if(temp && confirm("Do you want to unsub " + this.state.feeds[id - 1].name)) {
+				$.ajax({
+					type : 'DELETE',
+					url : 'http://localhost:8080/feed/' + id
+				})
+					.error((err) => {
+						console.log("We Can't Now UnSub This, Check Your Connections!");
+						throw err;
+					})
+					.success((chunk) => {
+						temp.splice(id - 1,1);
+						this.setState({
+								defaultFeedId : chunk.data,
+							feeds : temp
+						});
+					})
 		}
 	}
 }
