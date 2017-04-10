@@ -1,5 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
+import validUrl from 'valid-url';
 
 import LeftPanel from '../components/left-panel.js';
 import RightPanel from '../components/right-panel.js';
@@ -33,7 +34,7 @@ export default class Layout extends React.Component {
 
 		return(
 			<div className="fluid-container">
-					<LeftPanel feeds = { feeds } changeFeed = { this._changeFeed }></LeftPanel>
+					<LeftPanel addFeed = { this._addFeed } feeds = { feeds } changeFeed = { this._changeFeed }></LeftPanel>
 					<RightPanel feed = { feed } unsub = { this._unSubscribe }></RightPanel>
 			</div>
 		);
@@ -61,11 +62,38 @@ export default class Layout extends React.Component {
 			}, 4000);
 	}
 
+	// feed adding functionionality
+	_addFeed() {
+		let url = prompt('Please Enter Website url');
+
+		if(url) {
+			while( !validUrl.isUri(url) ) {
+				url = prompt('Please Enter Valid Website Url!');
+			}
+
+			$.ajax({
+				type : 'POST',
+				url  : 'http://localhost:8080/add',
+				data : { url : url.toString() }
+			})
+				.error( (err) => {
+					if(err) console.log("Request Error");
+				})
+				.success( (chunk) => {
+					if(chunk.error) {
+						console.log("Server can't to add new feed, Please Try Later!");
+					} else {
+						console.log(url + " Has Added Successfully!");
+					}
+				});
+		}
+	}
+
 	// Get all Feeds from server
 	_fetchAllFeeds() {
 			return  new Promise((resolve, reject) => {
 
-				// Sending Request To get all of the feeds
+				// Sending Request To\ get all of the feeds
 				$.ajax({
 					type : 'GET',
 		      url : `http://localhost:8080/feeds`,
@@ -78,7 +106,9 @@ export default class Layout extends React.Component {
 						if(chunk.error) {
 							reject(new Error("Not Founded"));
 						}
-						resolve(JSON.parse(chunk.data));
+						else {
+							resolve(JSON.parse(chunk.data));
+						}
 					})
 			});
 	}
@@ -88,7 +118,7 @@ export default class Layout extends React.Component {
 
 		// Get Information Of all Feeds
 		const feeds = this.state && this.state.feeds;
-		
+
 		// find feed by given id
 		let feed = [];
 
