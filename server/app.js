@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 app.get('/feeds', urlEncoder, (req, res) => {
     client.lrange('feeds', 0, -1, (err, chunks) => {
         if(err) {
-          res.status(404).json({ error: true, data: "Not Founded!"});
+          res.status(404).json({ error: true, data: "Not Founded!"}).end();
         }
 
         // Sending all of the user subscribed feeds
@@ -52,6 +52,10 @@ app.get('/feed/:name', urlEncoder, (req, res) => {
   // Decode Website feed url
   let url = decodeURIComponent(req.params.name);
 
+  req.on('cancel', () => {
+    console.log(url,'canceled');
+  });
+
   // Find Rss link
   rssFinder(url)
     .then((feedLinkData) => {
@@ -62,10 +66,12 @@ app.get('/feed/:name', urlEncoder, (req, res) => {
         })
         .catch((err) => {
           console.log(err);
-          res.status(404).json(error : err);
+          res.status(404).end()
         });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      res.status(404).end();
+    });
 
 });
 
@@ -75,7 +81,7 @@ app.delete('/feed/:id', urlEncoder, (req, res) => {
     client.lrange('feeds', 0, -1, (err, chunks) => {
         let chunk = JSON.parse(chunks[0]);
         if(err) {
-          res.status(404).json({ error: true, data: "Not Founded!"});
+          res.status(404).json({ error: true, data: "Not Founded!"}).end();
         }
 
         const editedArray = chunk.filter((value) => {

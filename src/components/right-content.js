@@ -2,8 +2,10 @@ import React from 'react';
 import Article from '../components/feed-article.js';
 import $ from 'jquery';
 import '../styles/right-content.css';
+import '../styles/right-content-loader.css';
 
 var token = false;
+var previousFeed = 0;
 
 export default class RightContent extends React.Component {
   constructor() {
@@ -24,6 +26,36 @@ export default class RightContent extends React.Component {
   }
 
   render() {
+    let loadedDiv = '';
+    console.log("In render" , previousFeed, this.props.feed['id']);
+    if( ( this.state.articles == [] ) ||
+          previousFeed !== ( this.props.feed && this.props.feed['id'] ) ) {
+
+            //Fetch Data
+            this._getFeedDataCont();
+
+            //Initlize Loaded Div
+       loadedDiv = (
+                    <div className="row loader-container feed-content-container">
+                      <div className="loader">
+                      <div className="loader__bar"></div>
+                      <div className="loader__bar"></div>
+                      <div className="loader__bar"></div>
+                      <div className="loader__bar"></div>
+                      <div className="loader__bar"></div>
+                      <div className="loader__ball"></div>
+                      <span> Loading ... </span>
+                      </div>
+                    </div>
+                  );
+    } else {
+       loadedDiv = (
+                   <div className="row feed-content-container">
+                       { this.state && this.state.articles }
+                   </div>
+                  );
+    }
+
     return(
       <div className="row" id="feed-container">
         <div className="fluid-container">
@@ -38,25 +70,22 @@ export default class RightContent extends React.Component {
               <button className="feed-header-right-btn">Mark All As Unread</button>
             </div>
           </div>
-          <div className="row feed-content-container">
-              { this.state && this.state.articles }
-          </div>
+          { loadedDiv }
         </div>
       </div>
     );
   }
 
   componentDidMount() {
+          this._getFeedDataCont();
+  }
 
-    setInterval( () => {
-      if(!token) {
-        if(Object.keys(this.props.feed || {}).length !== 0) {
-          token = true;
-          this._getReqFeedArticles(this.props.feed['link']);
-        }
-      }
-    },4000);
-
+  _getFeedDataCont() {
+    if(!token) {
+        token = true;
+        this._getReqFeedArticles((this.props.feed && this.props.feed['link'])
+                                  || 'Empty');
+    }
   }
 
   _setDataTempelate(articles) {
@@ -112,6 +141,10 @@ export default class RightContent extends React.Component {
       articlesTag.push(<Article value= { articles[i] } />);
     }
 
+
+    // save previous rendered feed
+    previousFeed = this.props.feed && this.props.feed['id'];
+
     this.setState({
       articles : articlesTag
     });
@@ -126,13 +159,19 @@ export default class RightContent extends React.Component {
       url : `http://localhost:8080/feed/${decodedUrl}`,
       data : ''
     }).error( (err) => {
+            this._getFeedDataCont();
           console.log('error Occuered', err);
           token = false;
+
         })
         .success( (data) => {
           console.log('Data Recieved', data);
             this._setDataTempelate(data);
             token = false;
+
+            // save previous rendered feed
+            previousFeed = this.props.feed && this.props.feed['id'];
+
         });
   }
 }
