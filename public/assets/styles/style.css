@@ -1,3 +1,38 @@
+* {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	padding : 0%;
+	margin : 0%;
+	border-radius: 0% !important;
+	text-decoration: none !important;
+}
 body {
 	background : green;
+}
+a {
+  color: inherit !important; /* blue colors for links too */
+	cursor : pointer;
+}
+
+i {
+	margin-right: 6px;
+}
+
+div {
+	display: block;
+}
+
+/*Color Of Inputs placeholder*/
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: white;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: white;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: white;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: white;
 }

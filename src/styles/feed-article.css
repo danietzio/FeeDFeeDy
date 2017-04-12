@@ -1,0 +1,120 @@
+/* Each Article Setting */
+article {
+  padding-top : 2px;
+  border-top : 1px solid #f7f7f7;
+  width: 100%;
+}
+
+.article-container {
+  display: table;
+  text-align: center;
+}
+
+.article-title-container {
+  display: table-cell;
+  width: 191px;
+  overflow: hidden;
+  text-align: left;
+  vertical-align: middle;
+  padding : 0% 1% 0% 1%;
+}
+
+.article-title-container span {
+  max-width : 191px;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: middle;
+  height : 1.5em;
+  font-family: 13px;
+}
+
+.article-data-container {
+  overflow: hidden;
+  display: block;
+  height : 2em;
+  width: auto;
+  vertical-align: middle;
+  text-align: left;
+  padding-left: 2%;
+}
+
+.article-metadata-container {
+  display: table-cell;
+  width: 121px;
+  text-align: right;
+  vertical-align: middle;
+}
+
+.article-actions-container {
+  display: table-cell;
+  width: 110px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.article-data-description {
+  line-height: 2em;
+  vertical-align: middle;
+}
+
+.article-data-description > span {
+  border-left: 1px solid rgb(255, 144, 9);
+  padding-left: 2%;
+}
+.article-data-description > span:nth-child(1) {
+  font-weight: bold
+}
+
+.article-data-description > span:nth-child(2) {
+  font-weight: bold;
+  font-size : 12px;
+  opacity : 0.6;
+  margin-left: 1%;
+}
+
+/* article expanded setting*/
+.article-expand-container {
+  text-align: center;
+  border-left : 1px solid #ff9009;
+  padding : 20px;
+  color : #5e6b68;
+  display : none;
+}
+
+.article-expand-container h2 {
+  padding-left: 2%;
+  border-left : 10px solid #ff9009;
+  text-align : left;
+}
+
+.article-expand-descp {
+  margin-top : 10px;
+  padding : 0% 10% 0% 10%;
+  text-align: left;
+}
+
+.article-expand-descp img , .article-expand-descp figure {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-bottom : 4px;
+    font-weight: bold;
+}
+
+.article-expand-descp img {
+    margin : 0px 10px 0px 10px;
+}
+
+.article-expand-descp p {
+  font-family : 'Fjord One' , seif;
+  font-size: 16px;
+}
+
+.article-expanded {
+  display : block;
+}
+
+.article-hidden {
+  display : none;
+}

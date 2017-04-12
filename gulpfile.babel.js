@@ -1,14 +1,10 @@
 import gulp from 'gulp';
-import browserify from 'browserify';
-import source from 'vinyl-source-stream';
-import buffer from 'vinyl-buffer';
 import eslint from 'gulp-eslint';
-import exorcist from 'exorcist';
 import browserSync from 'browser-sync';
+import webpack from 'webpack-stream';
 import watchify from 'watchify';
-import babelify from 'babelify';
-import uglify from 'gulp-uglify';
-import ifElse from 'gulp-if-else';
+import rename from 'gulp-rename';
+import gutil from 'gulp-util';
 
 watchify.args.debug = true;
 
@@ -16,26 +12,13 @@ const sync = browserSync.create();
 
 // Input file.
 watchify.args.debug = true;
-var bundler = browserify('src/app.js', watchify.args);
 
-// Babel transform
-bundler.transform(babelify.configure({
-    sourceMapRelative: 'src'
-}));
-
-// On updates recompile
-bundler.on('update', bundle);
-
+// bundler function
 function bundle() {
-    return bundler.bundle()
-        .on('error', function(error) {
-            console.error('\nError: ', error.message, '\n');
-            this.emit('end');
-        })
-        .pipe(exorcist('public/assets/js/bundle.js.map'))
-        .pipe(source('bundle.js'))
-        .pipe(buffer())
-        .pipe(ifElse(process.env.NODE_ENV === 'production', uglify))
+    return gulp.src('src/app.js')
+        .pipe(webpack(require('./webpack.config.js')))
+        .pipe(rename("bundle.js"))
+        .on('error', gutil.log)
         .pipe(gulp.dest('public/assets/js'));
 }
 
@@ -49,11 +32,15 @@ gulp.task('lint', () => {
         .pipe(eslint.format())
 });
 
-gulp.task('serve', ['transpile'], () => sync.init({
-    server: 'public',
-    port: process.env.PORT || 8000,
-    host: process.env.IP || 'localhost'
-}));
+gulp.task('serve', ['transpile'], () => {
+    delete process.env.BROWSER;
+
+    sync.init({
+        server: 'public',
+        port: process.env.PORT || 8000,
+        host: process.env.IP || 'localhost'
+    });
+});
 
 gulp.task('js-watch', ['transpile'], () => sync.reload());
 

@@ -1,0 +1,59 @@
+/* Right Main Panel*/
+#feed-container {
+  height: 90%;
+  margin : 0%;
+}
+
+#feed-container > div {
+  padding-left: 3%;
+  padding-right: 3%;
+}
+
+.feed-header-container {
+  font-family : 'Fjord One',  serif;
+  padding-top : 20px;
+  display: table;
+}
+
+.feed-header-left-container {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: left;
+  width: 500px;
+}
+.feed-header-right-container {
+  display: table-cell;
+  width: 600px;
+  text-align: right;
+}
+
+.feed-header-right-btn {
+  background : none;
+  border: 2px solid #FF9009;
+  font-weight: bold;
+  border-radius: 10px !important;
+  margin-left: 2%;
+  padding : 2%;
+  outline: none;
+}
+
+#feed-container #title {
+  font-size : 18px;
+}
+
+/* All Articles container*/
+.feed-content-container {
+  margin-top: 10px;
+}
+
+
+
+/* Medium Displays */
+@media (max-width: 992px) {
+  .feed-header-left-container {
+    width: 300px;
+  }
+  .feed-header-right-container {
+    text-align: right;
+  }
+}

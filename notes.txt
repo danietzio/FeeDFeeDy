@@ -1,0 +1,27 @@
+1 - yadam bashe akhar sar be function haye lifecylce tavjoh konam
+2 - tooye function getFeeds baraye uncategorized va ,,, subfiled dorost konam
+3 - bad az etmame project hatman kolle course React ro az aval negah konam va moshkeltam ro raf konam
+4 - bayad tooye function _getFeeds tooye layout.js , be jaye un az GET request estefade konam va dar soorate taghir biam va this.state.feeds ro taghir bedam
+5 - vaghti miaim va src haye image haro peyda mikonim , mitonim image src set ro peyda konim va baraye harkodom az andaze haye safhe yek image bezarim
+6 - bayad function bandi konam, masalan inke miam va description marboot be feed ro parse mikonam va ... ro bayad functionesh konam
+7 - bayad vaseye serveremon ba estefade az mocha test server benevisam
+8 - az redis baraye zakhire kardane etelat estefade konam va badan etelat har fard ro joda ghone bayad ba esmesh sabt konam
+9 - baraye shoro az redis estefade mikonim vali badan ke khastim chand ta use ro biarim tooye bazi bayad az mongodb estefade konam.
+10 - yadam nare ke karayi backend masalan caching va ... ke tooye un video goft ro beshinam va hamasho dorost konam.
+11 - az process.PORT ya varible hayi in shekli estefade konam ta rasmi tar beshe
+12 - bayad mesle projecrt 'Image Streaming App' biaim va function haro be soorate module dar biarim va masalan tooye folder controller begzarim.
+13 - badan bayad fek konam ke baraye inke feeds haye categorized va Uncategorized ro joda konam , behtare ke az clinet be server request befrestam va jodaghane har kodom az in daste haro daryaft konam, ya hameye feeds haro begiram va samte karbar tahlil konam
+14 - Adding Router to Our app
+15 - Dorost kardane Mark All as unread, Unsub, Setting, User Icon Setting Dar faze badi
+16 - Add kardane MongoDB be Our Application
+17 - Baraye harkodom az article ha va feeds ha yek ID generate konim.
+18 - Add kardane Sharing ba Safahate Ejtemayi
+19 - Authentication ba gmail, Facebook
+20 - Dorost kardane Gabeliate inke kenare har article betonim begim ke agha in bere Starred Items, ya All Items
+21 - Gabeliate Refresh kardan mimone vase faze badi.
+22 - samte chap ro bayad joori dorost konam ke container haye feed ha ba add new feed va setting fargh dashte bashe ta betonim over loading ro toosh emal konim ke add new button payin nare.
+23 - Un feed hayi ke image nemifrestan ro bayad vasashon img nazanim.
+24 - bayad feeds haro unqiue konam ke 2 ta rss az yek no nadashte bashim.
+25 - ezafe kardane Recommender System be website
+26 - to zehnam bashe ke vaghti miam va content har article ro parse mikonam va tag hasho pak mikonam, bayad to zehnam bashe ke emkan dare tooye descp image ha ya video hayi bashe ke faghat ma text esho neshon midim va unaro dar nazar nemigirm
+27 - bayad badan, be jaye inke har bar ke request miad beram va rssfinder ro seda bezanam vaghti ke miam va feed add mikonam , hamoonja feed hasho be DB add konam va badan az un estefade konam.

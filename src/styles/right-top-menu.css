@@ -1,0 +1,136 @@
+/* Right Setting Panel*/
+#right-top-menu-container {
+    height: 10%;
+    background-color: #FF9009;
+    margin: 0%;
+    height: 80px;
+}
+
+#right-top-menu-container > div {
+  padding : 0%;
+  margin : 0%;
+  padding-left: 3%;
+  padding-right: 3%;
+}
+
+#right-top-menu-container div .icons {
+    width: 30px;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.middleDiv {
+  position: relative;
+  top : 25%;
+  padding-left : 0%;
+  padding-right: 0%;
+  margin-left : 0%;
+  margin-right: 0%;
+}
+
+/* Search Section in the right setting panel*/
+#bk_search , #bk_profile {
+  display: inline-block;
+}
+
+#bk_search input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px dotted white;
+  font-size: 18px;
+  outline: none;
+  color : white;
+  width: 340px;
+}
+
+#bk_search i {
+  color : white;
+}
+
+/* Profile Iamge*/
+#bk_profile span {
+    position: absolute;
+    top: 25%;
+    color : white;
+}
+
+#bk_profile a {
+    position: relative;
+    top: 10%;
+    margin-left: 78px;
+}
+#bk_profile a div {
+    display: inline-block;
+    background-image : url("http://localhost:8000/assets/images/profile.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: 2px solid white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50% !important;
+}
+
+/* Left Segment of Right setting Panel*/
+#right-top-menu-container > div:first-child {
+  text-align: left;
+}
+
+/* Center Segment of Right setting Panel*/
+#right-top-menu-container > div:nth-child(2) {
+  text-align: center;
+}
+
+
+/* Right Segment of Right setting Panel*/
+#right-top-menu-container > div:nth-child(3) {
+  text-align: right;
+}
+
+/* Medium Displays */
+@media (max-width: 992px) {
+  #right-top-menu-container {
+    margin-left: -270px;
+  }
+  #right-top-menu-container > div {
+    text-align: center;
+    padding: 0%;
+    padding-left: 0%;
+    padding-right: 0%;
+  }
+}
+
+/* Small Displays */
+@media (max-width: 768px) {
+  #right-top-menu-container {
+    margin-left: 0px;
+  }
+
+  #bk_search input {
+    width: 250px;
+    font-size : 14px;
+  }
+  #right-top-menu-container div .icons {
+      width: 25px;
+      margin-left: 10px;
+  }
+  #bk_profile a div {
+      width: 35px;
+      height: 35px;
+  }
+
+  .middleDiv {
+    top : 30%;
+  }
+
+  .fa-search {
+    display : none !important;
+  }
+}
+
+/* Small Displays */
+@media (max-width: 468px) {
+  #bk_search input {
+    width: 100px;
+  }
+}

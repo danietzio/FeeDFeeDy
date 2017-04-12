@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "server for handling request for feeds data",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./bin/www.js --exec babel-node --presets es2015,stage-2"
+  },
+  "author": "dani.nasiri@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-stage-2": "^6.22.0",
+    "nodemon": "^1.11.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "feed-read": "0.0.1",
+    "nodemon": "^1.11.0",
+    "redis": "^2.7.1",
+    "rss-finder": "^2.0.3"
+  }
+}
