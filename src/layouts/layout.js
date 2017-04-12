@@ -41,25 +41,31 @@ export default class Layout extends React.Component {
 	}
 
 	componentDidMount() {
+			this._getFeedsCont();
+
 			setInterval(() => {
-				this._fetchAllFeeds()
-					.then((chunks) => {
-							this.setState({
-								feeds : chunks
-							});
-				}).catch((err) => {
-					if(err.message == "Not Founded")  {
-						this.setState({
-							defaultFeedId : 1,
-							feeds : []
-						});
-					}
-					else {
-						console.log(err);
-						throw err;
-					}
+				this._getFeedsCont();
+			}, 30000);
+	}
+
+	_getFeedsCont() {
+		this._fetchAllFeeds()
+			.then((chunks) => {
+					this.setState({
+						feeds : chunks
+					});
+		}).catch((err) => {
+			if(err.message == "Not Founded")  {
+				this.setState({
+					defaultFeedId : 1,
+					feeds : []
 				});
-			}, 4000);
+			}
+			else {
+				console.log(err);
+				throw err;
+			}
+		});
 	}
 
 	// feed adding functionionality
@@ -100,7 +106,10 @@ export default class Layout extends React.Component {
 		      data : ''
 				})
 					.error((err) => {
-						 if(err) reject(new Error("Request Error"));
+						 if(err) {
+							 this._getFeedsCont();
+							 reject(new Error("Request Error"));
+						 }
 					})
 					.success((chunk) => {
 						if(chunk.error) {

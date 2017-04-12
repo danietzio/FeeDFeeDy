@@ -17,16 +17,11 @@ export default class LeftPanel extends React.Component {
 
 							<li className="button" id="add-feed">
 									<span>
-										<i className="fa fa-plus" aria-hidden="true"></i>
+										<span>
+											<i className="fa fa-plus" aria-hidden="true"></i>
+										</span>
+										<a onClick={ () => this.props.addFeed() }>ADD New Feed</a>
 									</span>
-									<a onClick={ () => this.props.addFeed() }>Add New Feed</a>
-							</li>
-
-							<li className="button" id="setting">
-								<span>
-									<i className="fa fa-cog" aria-hidden="true"></i>
-								</span>
-								<a>Setting</a>
 							</li>
 						</ul>
 

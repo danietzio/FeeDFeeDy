@@ -22,3 +22,6 @@
 22 - samte chap ro bayad joori dorost konam ke container haye feed ha ba add new feed va setting fargh dashte bashe ta betonim over loading ro toosh emal konim ke add new button payin nare.
 23 - Un feed hayi ke image nemifrestan ro bayad vasashon img nazanim.
 24 - bayad feeds haro unqiue konam ke 2 ta rss az yek no nadashte bashim.
+25 - ezafe kardane Recommender System be website
+26 - to zehnam bashe ke vaghti miam va content har article ro parse mikonam va tag hasho pak mikonam, bayad to zehnam bashe ke emkan dare tooye descp image ha ya video hayi bashe ke faghat ma text esho neshon midim va unaro dar nazar nemigirm
+27 - bayad badan, be jaye inke har bar ke request miad beram va rssfinder ro seda bezanam vaghti ke miam va feed add mikonam , hamoonja feed hasho be DB add konam va badan az un estefade konam.
