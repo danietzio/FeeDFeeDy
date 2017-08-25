@@ -19,8 +19,8 @@
     "es2015"
   ],
   "devDependencies": {
-    "babel": "latest",
-    "babel-loader": "latest",
+    "babel" : "latest",
+    "babel-loader" : "latest",
     "assets-webpack-plugin": "^3.5.1",
     "babel-core": "^6.7.6",
     "babel-plugin-transform-require-ignore": "^0.1.0",

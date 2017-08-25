@@ -354,7 +354,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 var _prodInvariant = __webpack_require__(2);
 
-var DOMProperty = __webpack_require__(13);
+var DOMProperty = __webpack_require__(15);
 var ReactDOMComponentFlags = __webpack_require__(60);
 
 var invariant = __webpack_require__(0);
@@ -1608,220 +1608,6 @@ function getPooledWarningPropertyDefinition(propName, getVal) {
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-
-
-var _prodInvariant = __webpack_require__(2);
-
-var invariant = __webpack_require__(0);
-
-function checkMask(value, bitmask) {
-  return (value & bitmask) === bitmask;
-}
-
-var DOMPropertyInjection = {
-  /**
-   * Mapping from normalized, camelcased property names to a configuration that
-   * specifies how the associated DOM property should be accessed or rendered.
-   */
-  MUST_USE_PROPERTY: 0x1,
-  HAS_BOOLEAN_VALUE: 0x4,
-  HAS_NUMERIC_VALUE: 0x8,
-  HAS_POSITIVE_NUMERIC_VALUE: 0x10 | 0x8,
-  HAS_OVERLOADED_BOOLEAN_VALUE: 0x20,
-
-  /**
-   * Inject some specialized knowledge about the DOM. This takes a config object
-   * with the following properties:
-   *
-   * isCustomAttribute: function that given an attribute name will return true
-   * if it can be inserted into the DOM verbatim. Useful for data-* or aria-*
-   * attributes where it's impossible to enumerate all of the possible
-   * attribute names,
-   *
-   * Properties: object mapping DOM property name to one of the
-   * DOMPropertyInjection constants or null. If your attribute isn't in here,
-   * it won't get written to the DOM.
-   *
-   * DOMAttributeNames: object mapping React attribute name to the DOM
-   * attribute name. Attribute names not specified use the **lowercase**
-   * normalized name.
-   *
-   * DOMAttributeNamespaces: object mapping React attribute name to the DOM
-   * attribute namespace URL. (Attribute names not specified use no namespace.)
-   *
-   * DOMPropertyNames: similar to DOMAttributeNames but for DOM properties.
-   * Property names not specified use the normalized name.
-   *
-   * DOMMutationMethods: Properties that require special mutation methods. If
-   * `value` is undefined, the mutation method should unset the property.
-   *
-   * @param {object} domPropertyConfig the config as described above.
-   */
-  injectDOMPropertyConfig: function (domPropertyConfig) {
-    var Injection = DOMPropertyInjection;
-    var Properties = domPropertyConfig.Properties || {};
-    var DOMAttributeNamespaces = domPropertyConfig.DOMAttributeNamespaces || {};
-    var DOMAttributeNames = domPropertyConfig.DOMAttributeNames || {};
-    var DOMPropertyNames = domPropertyConfig.DOMPropertyNames || {};
-    var DOMMutationMethods = domPropertyConfig.DOMMutationMethods || {};
-
-    if (domPropertyConfig.isCustomAttribute) {
-      DOMProperty._isCustomAttributeFunctions.push(domPropertyConfig.isCustomAttribute);
-    }
-
-    for (var propName in Properties) {
-      !!DOMProperty.properties.hasOwnProperty(propName) ? Object({"BROWSER":true}).NODE_ENV !== 'production' ? invariant(false, 'injectDOMPropertyConfig(...): You\'re trying to inject DOM property \'%s\' which has already been injected. You may be accidentally injecting the same DOM property config twice, or you may be injecting two configs that have conflicting property names.', propName) : _prodInvariant('48', propName) : void 0;
-
-      var lowerCased = propName.toLowerCase();
-      var propConfig = Properties[propName];
-
-      var propertyInfo = {
-        attributeName: lowerCased,
-        attributeNamespace: null,
-        propertyName: propName,
-        mutationMethod: null,
-
-        mustUseProperty: checkMask(propConfig, Injection.MUST_USE_PROPERTY),
-        hasBooleanValue: checkMask(propConfig, Injection.HAS_BOOLEAN_VALUE),
-        hasNumericValue: checkMask(propConfig, Injection.HAS_NUMERIC_VALUE),
-        hasPositiveNumericValue: checkMask(propConfig, Injection.HAS_POSITIVE_NUMERIC_VALUE),
-        hasOverloadedBooleanValue: checkMask(propConfig, Injection.HAS_OVERLOADED_BOOLEAN_VALUE)
-      };
-      !(propertyInfo.hasBooleanValue + propertyInfo.hasNumericValue + propertyInfo.hasOverloadedBooleanValue <= 1) ? Object({"BROWSER":true}).NODE_ENV !== 'production' ? invariant(false, 'DOMProperty: Value can be one of boolean, overloaded boolean, or numeric value, but not a combination: %s', propName) : _prodInvariant('50', propName) : void 0;
-
-      if (Object({"BROWSER":true}).NODE_ENV !== 'production') {
-        DOMProperty.getPossibleStandardName[lowerCased] = propName;
-      }
-
-      if (DOMAttributeNames.hasOwnProperty(propName)) {
-        var attributeName = DOMAttributeNames[propName];
-        propertyInfo.attributeName = attributeName;
-        if (Object({"BROWSER":true}).NODE_ENV !== 'production') {
-          DOMProperty.getPossibleStandardName[attributeName] = propName;
-        }
-      }
-
-      if (DOMAttributeNamespaces.hasOwnProperty(propName)) {
-        propertyInfo.attributeNamespace = DOMAttributeNamespaces[propName];
-      }
-
-      if (DOMPropertyNames.hasOwnProperty(propName)) {
-        propertyInfo.propertyName = DOMPropertyNames[propName];
-      }
-
-      if (DOMMutationMethods.hasOwnProperty(propName)) {
-        propertyInfo.mutationMethod = DOMMutationMethods[propName];
-      }
-
-      DOMProperty.properties[propName] = propertyInfo;
-    }
-  }
-};
-
-/* eslint-disable max-len */
-var ATTRIBUTE_NAME_START_CHAR = ':A-Z_a-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD';
-/* eslint-enable max-len */
-
-/**
- * DOMProperty exports lookup objects that can be used like functions:
- *
- *   > DOMProperty.isValid['id']
- *   true
- *   > DOMProperty.isValid['foobar']
- *   undefined
- *
- * Although this may be confusing, it performs better in general.
- *
- * @see http://jsperf.com/key-exists
- * @see http://jsperf.com/key-missing
- */
-var DOMProperty = {
-  ID_ATTRIBUTE_NAME: 'data-reactid',
-  ROOT_ATTRIBUTE_NAME: 'data-reactroot',
-
-  ATTRIBUTE_NAME_START_CHAR: ATTRIBUTE_NAME_START_CHAR,
-  ATTRIBUTE_NAME_CHAR: ATTRIBUTE_NAME_START_CHAR + '\\-.0-9\\u00B7\\u0300-\\u036F\\u203F-\\u2040',
-
-  /**
-   * Map from property "standard name" to an object with info about how to set
-   * the property in the DOM. Each object contains:
-   *
-   * attributeName:
-   *   Used when rendering markup or with `*Attribute()`.
-   * attributeNamespace
-   * propertyName:
-   *   Used on DOM node instances. (This includes properties that mutate due to
-   *   external factors.)
-   * mutationMethod:
-   *   If non-null, used instead of the property or `setAttribute()` after
-   *   initial render.
-   * mustUseProperty:
-   *   Whether the property must be accessed and mutated as an object property.
-   * hasBooleanValue:
-   *   Whether the property should be removed when set to a falsey value.
-   * hasNumericValue:
-   *   Whether the property must be numeric or parse as a numeric and should be
-   *   removed when set to a falsey value.
-   * hasPositiveNumericValue:
-   *   Whether the property must be positive numeric or parse as a positive
-   *   numeric and should be removed when set to a falsey value.
-   * hasOverloadedBooleanValue:
-   *   Whether the property can be used as a flag as well as with a value.
-   *   Removed when strictly equal to false; present without a value when
-   *   strictly equal to true; present with a value otherwise.
-   */
-  properties: {},
-
-  /**
-   * Mapping from lowercase property names to the properly cased version, used
-   * to warn in the case of missing properties. Available only in __DEV__.
-   *
-   * autofocus is predefined, because adding it to the property whitelist
-   * causes unintended side effects.
-   *
-   * @type {Object}
-   */
-  getPossibleStandardName: Object({"BROWSER":true}).NODE_ENV !== 'production' ? { autofocus: 'autoFocus' } : null,
-
-  /**
-   * All of the isCustomAttribute() functions that have been injected.
-   */
-  _isCustomAttributeFunctions: [],
-
-  /**
-   * Checks whether a property name is a custom attribute.
-   * @method
-   */
-  isCustomAttribute: function (attributeName) {
-    for (var i = 0; i < DOMProperty._isCustomAttributeFunctions.length; i++) {
-      var isCustomAttributeFn = DOMProperty._isCustomAttributeFunctions[i];
-      if (isCustomAttributeFn(attributeName)) {
-        return true;
-      }
-    }
-    return false;
-  },
-
-  injection: DOMPropertyInjection
-};
-
-module.exports = DOMProperty;
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
@@ -1901,7 +1687,7 @@ function toComment(sourceMap) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(194).Buffer))
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -2195,6 +1981,220 @@ function updateLink(linkElement, options, obj) {
 		URL.revokeObjectURL(oldSrc);
 }
 
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+
+
+var _prodInvariant = __webpack_require__(2);
+
+var invariant = __webpack_require__(0);
+
+function checkMask(value, bitmask) {
+  return (value & bitmask) === bitmask;
+}
+
+var DOMPropertyInjection = {
+  /**
+   * Mapping from normalized, camelcased property names to a configuration that
+   * specifies how the associated DOM property should be accessed or rendered.
+   */
+  MUST_USE_PROPERTY: 0x1,
+  HAS_BOOLEAN_VALUE: 0x4,
+  HAS_NUMERIC_VALUE: 0x8,
+  HAS_POSITIVE_NUMERIC_VALUE: 0x10 | 0x8,
+  HAS_OVERLOADED_BOOLEAN_VALUE: 0x20,
+
+  /**
+   * Inject some specialized knowledge about the DOM. This takes a config object
+   * with the following properties:
+   *
+   * isCustomAttribute: function that given an attribute name will return true
+   * if it can be inserted into the DOM verbatim. Useful for data-* or aria-*
+   * attributes where it's impossible to enumerate all of the possible
+   * attribute names,
+   *
+   * Properties: object mapping DOM property name to one of the
+   * DOMPropertyInjection constants or null. If your attribute isn't in here,
+   * it won't get written to the DOM.
+   *
+   * DOMAttributeNames: object mapping React attribute name to the DOM
+   * attribute name. Attribute names not specified use the **lowercase**
+   * normalized name.
+   *
+   * DOMAttributeNamespaces: object mapping React attribute name to the DOM
+   * attribute namespace URL. (Attribute names not specified use no namespace.)
+   *
+   * DOMPropertyNames: similar to DOMAttributeNames but for DOM properties.
+   * Property names not specified use the normalized name.
+   *
+   * DOMMutationMethods: Properties that require special mutation methods. If
+   * `value` is undefined, the mutation method should unset the property.
+   *
+   * @param {object} domPropertyConfig the config as described above.
+   */
+  injectDOMPropertyConfig: function (domPropertyConfig) {
+    var Injection = DOMPropertyInjection;
+    var Properties = domPropertyConfig.Properties || {};
+    var DOMAttributeNamespaces = domPropertyConfig.DOMAttributeNamespaces || {};
+    var DOMAttributeNames = domPropertyConfig.DOMAttributeNames || {};
+    var DOMPropertyNames = domPropertyConfig.DOMPropertyNames || {};
+    var DOMMutationMethods = domPropertyConfig.DOMMutationMethods || {};
+
+    if (domPropertyConfig.isCustomAttribute) {
+      DOMProperty._isCustomAttributeFunctions.push(domPropertyConfig.isCustomAttribute);
+    }
+
+    for (var propName in Properties) {
+      !!DOMProperty.properties.hasOwnProperty(propName) ? Object({"BROWSER":true}).NODE_ENV !== 'production' ? invariant(false, 'injectDOMPropertyConfig(...): You\'re trying to inject DOM property \'%s\' which has already been injected. You may be accidentally injecting the same DOM property config twice, or you may be injecting two configs that have conflicting property names.', propName) : _prodInvariant('48', propName) : void 0;
+
+      var lowerCased = propName.toLowerCase();
+      var propConfig = Properties[propName];
+
+      var propertyInfo = {
+        attributeName: lowerCased,
+        attributeNamespace: null,
+        propertyName: propName,
+        mutationMethod: null,
+
+        mustUseProperty: checkMask(propConfig, Injection.MUST_USE_PROPERTY),
+        hasBooleanValue: checkMask(propConfig, Injection.HAS_BOOLEAN_VALUE),
+        hasNumericValue: checkMask(propConfig, Injection.HAS_NUMERIC_VALUE),
+        hasPositiveNumericValue: checkMask(propConfig, Injection.HAS_POSITIVE_NUMERIC_VALUE),
+        hasOverloadedBooleanValue: checkMask(propConfig, Injection.HAS_OVERLOADED_BOOLEAN_VALUE)
+      };
+      !(propertyInfo.hasBooleanValue + propertyInfo.hasNumericValue + propertyInfo.hasOverloadedBooleanValue <= 1) ? Object({"BROWSER":true}).NODE_ENV !== 'production' ? invariant(false, 'DOMProperty: Value can be one of boolean, overloaded boolean, or numeric value, but not a combination: %s', propName) : _prodInvariant('50', propName) : void 0;
+
+      if (Object({"BROWSER":true}).NODE_ENV !== 'production') {
+        DOMProperty.getPossibleStandardName[lowerCased] = propName;
+      }
+
+      if (DOMAttributeNames.hasOwnProperty(propName)) {
+        var attributeName = DOMAttributeNames[propName];
+        propertyInfo.attributeName = attributeName;
+        if (Object({"BROWSER":true}).NODE_ENV !== 'production') {
+          DOMProperty.getPossibleStandardName[attributeName] = propName;
+        }
+      }
+
+      if (DOMAttributeNamespaces.hasOwnProperty(propName)) {
+        propertyInfo.attributeNamespace = DOMAttributeNamespaces[propName];
+      }
+
+      if (DOMPropertyNames.hasOwnProperty(propName)) {
+        propertyInfo.propertyName = DOMPropertyNames[propName];
+      }
+
+      if (DOMMutationMethods.hasOwnProperty(propName)) {
+        propertyInfo.mutationMethod = DOMMutationMethods[propName];
+      }
+
+      DOMProperty.properties[propName] = propertyInfo;
+    }
+  }
+};
+
+/* eslint-disable max-len */
+var ATTRIBUTE_NAME_START_CHAR = ':A-Z_a-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD';
+/* eslint-enable max-len */
+
+/**
+ * DOMProperty exports lookup objects that can be used like functions:
+ *
+ *   > DOMProperty.isValid['id']
+ *   true
+ *   > DOMProperty.isValid['foobar']
+ *   undefined
+ *
+ * Although this may be confusing, it performs better in general.
+ *
+ * @see http://jsperf.com/key-exists
+ * @see http://jsperf.com/key-missing
+ */
+var DOMProperty = {
+  ID_ATTRIBUTE_NAME: 'data-reactid',
+  ROOT_ATTRIBUTE_NAME: 'data-reactroot',
+
+  ATTRIBUTE_NAME_START_CHAR: ATTRIBUTE_NAME_START_CHAR,
+  ATTRIBUTE_NAME_CHAR: ATTRIBUTE_NAME_START_CHAR + '\\-.0-9\\u00B7\\u0300-\\u036F\\u203F-\\u2040',
+
+  /**
+   * Map from property "standard name" to an object with info about how to set
+   * the property in the DOM. Each object contains:
+   *
+   * attributeName:
+   *   Used when rendering markup or with `*Attribute()`.
+   * attributeNamespace
+   * propertyName:
+   *   Used on DOM node instances. (This includes properties that mutate due to
+   *   external factors.)
+   * mutationMethod:
+   *   If non-null, used instead of the property or `setAttribute()` after
+   *   initial render.
+   * mustUseProperty:
+   *   Whether the property must be accessed and mutated as an object property.
+   * hasBooleanValue:
+   *   Whether the property should be removed when set to a falsey value.
+   * hasNumericValue:
+   *   Whether the property must be numeric or parse as a numeric and should be
+   *   removed when set to a falsey value.
+   * hasPositiveNumericValue:
+   *   Whether the property must be positive numeric or parse as a positive
+   *   numeric and should be removed when set to a falsey value.
+   * hasOverloadedBooleanValue:
+   *   Whether the property can be used as a flag as well as with a value.
+   *   Removed when strictly equal to false; present without a value when
+   *   strictly equal to true; present with a value otherwise.
+   */
+  properties: {},
+
+  /**
+   * Mapping from lowercase property names to the properly cased version, used
+   * to warn in the case of missing properties. Available only in __DEV__.
+   *
+   * autofocus is predefined, because adding it to the property whitelist
+   * causes unintended side effects.
+   *
+   * @type {Object}
+   */
+  getPossibleStandardName: Object({"BROWSER":true}).NODE_ENV !== 'production' ? { autofocus: 'autoFocus' } : null,
+
+  /**
+   * All of the isCustomAttribute() functions that have been injected.
+   */
+  _isCustomAttributeFunctions: [],
+
+  /**
+   * Checks whether a property name is a custom attribute.
+   * @method
+   */
+  isCustomAttribute: function (attributeName) {
+    for (var i = 0; i < DOMProperty._isCustomAttributeFunctions.length; i++) {
+      var isCustomAttributeFn = DOMProperty._isCustomAttributeFunctions[i];
+      if (isCustomAttributeFn(attributeName)) {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  injection: DOMPropertyInjection
+};
+
+module.exports = DOMProperty;
 
 /***/ }),
 /* 16 */
@@ -17880,15 +17880,11 @@ var ViewportMetrics = {
 
   currentScrollTop: 0,
 
-<<<<<<< HEAD
-	__webpack_require__(212);
-=======
   refreshScrollValues: function (scrollPosition) {
     ViewportMetrics.currentScrollLeft = scrollPosition.x;
     ViewportMetrics.currentScrollTop = scrollPosition.y;
   }
 };
->>>>>>> Resolve bug in npm
 
 module.exports = ViewportMetrics;
 
@@ -18157,7 +18153,7 @@ module.exports = CSSProperty;
 
 
 
-var DOMProperty = __webpack_require__(13);
+var DOMProperty = __webpack_require__(15);
 var ReactDOMComponentTree = __webpack_require__(4);
 var ReactInstrumentation = __webpack_require__(7);
 
@@ -18400,37 +18396,7 @@ module.exports = DOMPropertyOperations;
 
 var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
-<<<<<<< HEAD
-				this._getFeedsCont();
-
-				setInterval(function () {
-					_this2._getFeedsCont();
-				}, 30000);
-			}
-		}, {
-			key: '_getFeedsCont',
-			value: function _getFeedsCont() {
-				var _this3 = this;
-
-				this._fetchAllFeeds().then(function (chunks) {
-					_this3.setState({
-						feeds: chunks
-					});
-				}).catch(function (err) {
-					if (err.message == "Not Founded") {
-						_this3.setState({
-							defaultFeedId: 1,
-							feeds: []
-						});
-					} else {
-						console.log(err);
-						throw err;
-					}
-				});
-			}
-=======
 module.exports = ReactPropTypesSecret;
->>>>>>> Resolve bug in npm
 
 /***/ }),
 /* 74 */
@@ -18833,38 +18799,7 @@ module.exports = ReactNodeTypes;
 
 
 
-<<<<<<< HEAD
-			// Get all Feeds from server
-
-		}, {
-			key: '_fetchAllFeeds',
-			value: function _fetchAllFeeds() {
-				var _this4 = this;
-
-				return new Promise(function (resolve, reject) {
-
-					// Sending Request To\ get all of the feeds
-					_jquery2.default.ajax({
-						type: 'GET',
-						url: 'http://localhost:8080/feeds',
-						data: ''
-					}).error(function (err) {
-						if (err) {
-							_this4._getFeedsCont();
-							reject(new Error("Request Error"));
-						}
-					}).success(function (chunk) {
-						if (chunk.error) {
-							reject(new Error("Not Founded"));
-						} else {
-							resolve(JSON.parse(chunk.data));
-						}
-					});
-				});
-			}
-=======
 var emptyComponentFactory;
->>>>>>> Resolve bug in npm
 
 var ReactEmptyComponentInjection = {
   injectEmptyComponentFactory: function (factory) {
@@ -19410,7 +19345,7 @@ module.exports = getActiveElement;
 var _prodInvariant = __webpack_require__(2);
 
 var DOMLazyTree = __webpack_require__(21);
-var DOMProperty = __webpack_require__(13);
+var DOMProperty = __webpack_require__(15);
 var React = __webpack_require__(18);
 var ReactBrowserEventEmitter = __webpack_require__(34);
 var ReactCurrentOwner = __webpack_require__(9);
@@ -19952,38 +19887,12 @@ module.exports = ReactMount;
 
 var ReactNodeTypes = __webpack_require__(76);
 
-<<<<<<< HEAD
-		}, {
-			key: '_unSubscribe',
-			value: function _unSubscribe(id) {
-				var _this5 = this;
-
-				var temp = this.state && this.state.feeds;
-				if (temp && confirm("Do you want to unsub " + this.state.feeds[id - 1].name)) {
-					_jquery2.default.ajax({
-						type: 'DELETE',
-						url: 'http://localhost:8080/feed/' + id
-					}).error(function (err) {
-						console.log("We Can't Now UnSub This, Check Your Connections!");
-						throw err;
-					}).success(function (chunk) {
-						temp.splice(id - 1, 1);
-						_this5.setState({
-							defaultFeedId: chunk.data,
-							feeds: temp
-						});
-					});
-				}
-			}
-		}]);
-=======
 function getHostComponentFromComposite(inst) {
   var type;
 
   while ((type = inst._renderedNodeType) === ReactNodeTypes.COMPOSITE) {
     inst = inst._renderedComponent;
   }
->>>>>>> Resolve bug in npm
 
   if (type === ReactNodeTypes.HOST) {
     return inst._renderedComponent;
@@ -20896,49 +20805,6 @@ module.exports = ReactPropTypeLocationNames;
  * 
  */
 
-<<<<<<< HEAD
-				return _react2.default.createElement(
-					'div',
-					{ id: 'left-panel-container' },
-					_react2.default.createElement(
-						'ul',
-						{ id: 'left-panel' },
-						_react2.default.createElement(
-							'li',
-							{ id: 'logo-header' },
-							_react2.default.createElement(_logo2.default, { src: 'http://localhost:8000', descp: 'Company logo' })
-						),
-						_react2.default.createElement(
-							'li',
-							null,
-							_react2.default.createElement(_category2.default, { feeds: this.props.feeds, changeFeed: this.props.changeFeed })
-						),
-						_react2.default.createElement(
-							'li',
-							{ className: 'button', id: 'add-feed' },
-							_react2.default.createElement(
-								'span',
-								null,
-								_react2.default.createElement(
-									'span',
-									null,
-									_react2.default.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
-								),
-								_react2.default.createElement(
-									'a',
-									{ onClick: function onClick() {
-											return _this2.props.addFeed();
-										} },
-									'ADD New Feed'
-								)
-							)
-						)
-					)
-				);
-			}
-		}]);
-=======
->>>>>>> Resolve bug in npm
 
 
 var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
@@ -21592,27 +21458,8 @@ module.exports = '15.6.1';
 
 
 
-<<<<<<< HEAD
-		_createClass(Logo, [{
-			key: 'render',
-			value: function render() {
-				return _react2.default.createElement(
-					'div',
-					{ id: 'site-logo' },
-					_react2.default.createElement('img', { src: this.props.src + "/assets/images/logo.png" }),
-					_react2.default.createElement(
-						'p',
-						null,
-						' ',
-						this.props.descp
-					)
-				);
-			}
-		}]);
-=======
 var _require = __webpack_require__(53),
     Component = _require.Component;
->>>>>>> Resolve bug in npm
 
 var _require2 = __webpack_require__(16),
     isValidElement = _require2.isValidElement;
@@ -22553,11 +22400,6 @@ module.exports = onlyChild;
 
 module.exports = __webpack_require__(102);
 
-<<<<<<< HEAD
-	// module
-	exports.push([module.id, "#site-logo img {\r\n\twidth : 40%;\r\n}\r\np {\r\n\tfont-size : 20px;\r\n}\r\n", ""]);
-=======
->>>>>>> Resolve bug in npm
 
 /***/ }),
 /* 102 */
@@ -24591,7 +24433,7 @@ module.exports = EnterLeaveEventPlugin;
 
 
 
-var DOMProperty = __webpack_require__(13);
+var DOMProperty = __webpack_require__(15);
 
 var MUST_USE_PROPERTY = DOMProperty.injection.MUST_USE_PROPERTY;
 var HAS_BOOLEAN_VALUE = DOMProperty.injection.HAS_BOOLEAN_VALUE;
@@ -25284,7 +25126,7 @@ var AutoFocusUtils = __webpack_require__(127);
 var CSSPropertyOperations = __webpack_require__(128);
 var DOMLazyTree = __webpack_require__(21);
 var DOMNamespaces = __webpack_require__(42);
-var DOMProperty = __webpack_require__(13);
+var DOMProperty = __webpack_require__(15);
 var DOMPropertyOperations = __webpack_require__(72);
 var EventPluginHub = __webpack_require__(23);
 var EventPluginRegistry = __webpack_require__(29);
@@ -30286,7 +30128,7 @@ module.exports = getUnboundedScrollPosition;
 
 
 
-var DOMProperty = __webpack_require__(13);
+var DOMProperty = __webpack_require__(15);
 var EventPluginHub = __webpack_require__(23);
 var EventPluginUtils = __webpack_require__(36);
 var ReactComponentEnvironment = __webpack_require__(45);
@@ -32436,7 +32278,7 @@ module.exports = ReactMount.renderSubtreeIntoContainer;
 
 
 
-var DOMProperty = __webpack_require__(13);
+var DOMProperty = __webpack_require__(15);
 var EventPluginRegistry = __webpack_require__(29);
 var ReactComponentTreeHook = __webpack_require__(6);
 
@@ -32601,7 +32443,7 @@ module.exports = ReactDOMNullInputValuePropHook;
 
 
 
-var DOMProperty = __webpack_require__(13);
+var DOMProperty = __webpack_require__(15);
 var ReactComponentTreeHook = __webpack_require__(6);
 
 var warning = __webpack_require__(1);
@@ -32715,7 +32557,7 @@ var _rightPanel = __webpack_require__(205);
 
 var _rightPanel2 = _interopRequireDefault(_rightPanel);
 
-__webpack_require__(217);
+__webpack_require__(219);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32771,23 +32613,32 @@ var Layout = function (_React$Component) {
 		value: function componentDidMount() {
 			var _this2 = this;
 
+			this._getFeedsCont();
+
 			setInterval(function () {
-				_this2._fetchAllFeeds().then(function (chunks) {
-					_this2.setState({
-						feeds: chunks
-					});
-				}).catch(function (err) {
-					if (err.message == "Not Founded") {
-						_this2.setState({
-							defaultFeedId: 1,
-							feeds: []
-						});
-					} else {
-						console.log(err);
-						throw err;
-					}
+				_this2._getFeedsCont();
+			}, 30000);
+		}
+	}, {
+		key: '_getFeedsCont',
+		value: function _getFeedsCont() {
+			var _this3 = this;
+
+			this._fetchAllFeeds().then(function (chunks) {
+				_this3.setState({
+					feeds: chunks
 				});
-			}, 4000);
+			}).catch(function (err) {
+				if (err.message == "Not Founded") {
+					_this3.setState({
+						defaultFeedId: 1,
+						feeds: []
+					});
+				} else {
+					console.log(err);
+					throw err;
+				}
+			});
 		}
 
 		// feed adding functionionality
@@ -32823,6 +32674,8 @@ var Layout = function (_React$Component) {
 	}, {
 		key: '_fetchAllFeeds',
 		value: function _fetchAllFeeds() {
+			var _this4 = this;
+
 			return new Promise(function (resolve, reject) {
 
 				// Sending Request To\ get all of the feeds
@@ -32831,7 +32684,10 @@ var Layout = function (_React$Component) {
 					url: 'http://localhost:8080/feeds',
 					data: ''
 				}).error(function (err) {
-					if (err) reject(new Error("Request Error"));
+					if (err) {
+						_this4._getFeedsCont();
+						reject(new Error("Request Error"));
+					}
 				}).success(function (chunk) {
 					if (chunk.error) {
 						reject(new Error("Not Founded"));
@@ -32879,7 +32735,7 @@ var Layout = function (_React$Component) {
 	}, {
 		key: '_unSubscribe',
 		value: function _unSubscribe(id) {
-			var _this3 = this;
+			var _this5 = this;
 
 			var temp = this.state && this.state.feeds;
 			if (temp && confirm("Do you want to unsub " + this.state.feeds[id - 1].name)) {
@@ -32891,7 +32747,7 @@ var Layout = function (_React$Component) {
 					throw err;
 				}).success(function (chunk) {
 					temp.splice(id - 1, 1);
-					_this3.setState({
+					_this5.setState({
 						defaultFeedId: chunk.data,
 						feeds: temp
 					});
@@ -33164,28 +33020,18 @@ var LeftPanel = function (_React$Component) {
 						_react2.default.createElement(
 							'span',
 							null,
-							_react2.default.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
-						),
-						_react2.default.createElement(
-							'a',
-							{ onClick: function onClick() {
-									return _this2.props.addFeed();
-								} },
-							'Add New Feed'
-						)
-					),
-					_react2.default.createElement(
-						'li',
-						{ className: 'button', id: 'setting' },
-						_react2.default.createElement(
-							'span',
-							null,
-							_react2.default.createElement('i', { className: 'fa fa-cog', 'aria-hidden': 'true' })
-						),
-						_react2.default.createElement(
-							'a',
-							null,
-							'Setting'
+							_react2.default.createElement(
+								'span',
+								null,
+								_react2.default.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
+							),
+							_react2.default.createElement(
+								'a',
+								{ onClick: function onClick() {
+										return _this2.props.addFeed();
+									} },
+								'ADD New Feed'
+							)
 						)
 					)
 				)
@@ -33239,7 +33085,7 @@ var Logo = function (_React$Component) {
 		value: function render() {
 			return _react2.default.createElement(
 				'div',
-				null,
+				{ id: 'site-logo' },
 				_react2.default.createElement('img', { src: this.props.src + "/assets/images/logo.png" }),
 				_react2.default.createElement(
 					'p',
@@ -33266,7 +33112,7 @@ exports.default = Logo;
 var content = __webpack_require__(193);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(15)(content, {});
+var update = __webpack_require__(14)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -33286,12 +33132,12 @@ if(false) {
 /* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(14)(undefined);
+exports = module.exports = __webpack_require__(13)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, "img {\r\n\twidth : 40%;\r\n}\r\np {\r\n\tfont-size : 20px;\r\n}\r\n", ""]);
+exports.push([module.i, "#site-logo img {\r\n\twidth : 40%;\r\n}\r\np {\r\n\tfont-size : 20px;\r\n}\r\n", ""]);
 
 // exports
 
@@ -35614,7 +35460,7 @@ exports.default = Category;
 var content = __webpack_require__(202);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(15)(content, {});
+var update = __webpack_require__(14)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -35634,7 +35480,7 @@ if(false) {
 /* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(14)(undefined);
+exports = module.exports = __webpack_require__(13)(undefined);
 // imports
 
 
@@ -35654,7 +35500,7 @@ exports.push([module.i, "#category-list {\r\n  text-align: left;\r\n  padding-le
 var content = __webpack_require__(204);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(15)(content, {});
+var update = __webpack_require__(14)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -35674,17 +35520,12 @@ if(false) {
 /* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
-<<<<<<< HEAD
-	// module
-	exports.push([module.id, "/* Make Static Sidebar*/\r\n#left-panel-container {\r\n  width: 270px;\r\n  position: fixed;\r\n  height : 100%;\r\n  background-color: #585858;\r\n  color : white;\r\n}\r\n\r\n/**/\r\nul {\r\n  list-style-type : none;\r\n  padding : 0%;\r\n  width : 100%;\r\n}\r\n\r\n/*Making distanace between outer li's*/\r\n#left-panel > li {\r\n  padding-top : 2%;\r\n  font-family :'Fjord One' , seif;\r\n  font-size: 17px;\r\n}\r\n\r\n/*Make distance between Images and Categories*/\r\n#left-panel > li:first-child  {\r\n  margin-bottom : 14%;\r\n  text-align: center;\r\n  font-family: 'Bree Serif', seif;\r\n}\r\n\r\n/*Make distance between AddNewButton and Categories*/\r\n#left-panel > li:nth-child(3){\r\n  position: absolute;\r\n  bottom : 0px;\r\n  width: 100%;\r\n  height: 10%;\r\n}\r\n\r\n#add-feed > span {\r\n  padding : 10% 10% 10% 10%;\r\n  position : absolute;\r\n  top : 0%;\r\n  bottom : 0%;\r\n}\r\n\r\n#left-panel > li:nth-child(4) {\r\n  position : absolute;\r\n  bottom : 18px;\r\n  width: 100%;\r\n}\r\n#left-panel li a {\r\n  width : 100%;\r\n  text-align: left;\r\n}\r\n\r\n/* Making links looks better */\r\n.button {\r\n  margin-top : 1%;\r\n  padding-top : 2%;\r\n  padding-left: 12%;\r\n  padding-bottom: 2%;\r\n  background: #FF9009;\r\n}\r\n\r\n/* Medium Displays */\r\n@media (max-width: 992px) {\r\n  #left-panel {\r\n      margin-top: 90px;\r\n\r\n  }\r\n}\r\n\r\n/*Small Displays*/\r\n@media (max-width: 768px) {\r\n  #left-panel-container {\r\n    display : none;\r\n  }\r\n}\r\n", ""]);
-=======
-exports = module.exports = __webpack_require__(14)(undefined);
+exports = module.exports = __webpack_require__(13)(undefined);
 // imports
->>>>>>> Resolve bug in npm
 
 
 // module
-exports.push([module.i, "/* Make Static Sidebar*/\r\n#left-panel-container {\r\n  width: 270px;\r\n  position: fixed;\r\n  height : 100%;\r\n  background-color: #585858;\r\n  color : white;\r\n}\r\n\r\n/**/\r\nul {\r\n  list-style-type : none;\r\n  padding : 0%;\r\n  width : 100%;\r\n}\r\n\r\n/*Making distanace between outer li's*/\r\n#left-panel > li {\r\n  padding-top : 2%;\r\n  font-family :'Fjord One' , seif;\r\n  font-size: 17px;\r\n}\r\n\r\n/*Make distance between Images and Categories*/\r\n#left-panel > li:first-child  {\r\n  margin-bottom : 14%;\r\n  text-align: center;\r\n  font-family: 'Bree Serif', seif;\r\n}\r\n\r\n/*Make distance between AddNewButton and Categories*/\r\n#left-panel > li:nth-child(3){\r\n  position: absolute;\r\n  bottom : 60px;\r\n  width: 100%;\r\n}\r\n\r\n#left-panel > li:nth-child(4) {\r\n  position : absolute;\r\n  bottom : 18px;\r\n  width: 100%;\r\n}\r\n#left-panel li a {\r\n  width : 100%;\r\n  text-align: left;\r\n}\r\n\r\n/* Making links looks better */\r\n.button {\r\n  margin-top : 1%;\r\n  padding-top : 2%;\r\n  padding-left: 12%;\r\n  padding-bottom: 2%;\r\n  background: #FF9009;\r\n}\r\n\r\n/* Medium Displays */\r\n@media (max-width: 992px) {\r\n  #left-panel {\r\n      margin-top: 90px;\r\n\r\n  }\r\n}\r\n\r\n/*Small Displays*/\r\n@media (max-width: 768px) {\r\n  #left-panel-container {\r\n    display : none;\r\n  }\r\n}\r\n", ""]);
+exports.push([module.i, "/* Make Static Sidebar*/\r\n#left-panel-container {\r\n  width: 270px;\r\n  position: fixed;\r\n  height : 100%;\r\n  background-color: #585858;\r\n  color : white;\r\n}\r\n\r\n/**/\r\nul {\r\n  list-style-type : none;\r\n  padding : 0%;\r\n  width : 100%;\r\n}\r\n\r\n/*Making distanace between outer li's*/\r\n#left-panel > li {\r\n  padding-top : 2%;\r\n  font-family :'Fjord One' , seif;\r\n  font-size: 17px;\r\n}\r\n\r\n/*Make distance between Images and Categories*/\r\n#left-panel > li:first-child  {\r\n  margin-bottom : 14%;\r\n  text-align: center;\r\n  font-family: 'Bree Serif', seif;\r\n}\r\n\r\n/*Make distance between AddNewButton and Categories*/\r\n#left-panel > li:nth-child(3){\r\n  position: absolute;\r\n  bottom : 0px;\r\n  width: 100%;\r\n  height: 10%;\r\n}\r\n\r\n#add-feed > span {\r\n  padding : 10% 10% 10% 10%;\r\n  position : absolute;\r\n  top : 0%;\r\n  bottom : 0%;\r\n}\r\n\r\n#left-panel > li:nth-child(4) {\r\n  position : absolute;\r\n  bottom : 18px;\r\n  width: 100%;\r\n}\r\n#left-panel li a {\r\n  width : 100%;\r\n  text-align: left;\r\n}\r\n\r\n/* Making links looks better */\r\n.button {\r\n  margin-top : 1%;\r\n  padding-top : 2%;\r\n  padding-left: 12%;\r\n  padding-bottom: 2%;\r\n  background: #FF9009;\r\n}\r\n\r\n/* Medium Displays */\r\n@media (max-width: 992px) {\r\n  #left-panel {\r\n      margin-top: 90px;\r\n\r\n  }\r\n}\r\n\r\n/*Small Displays*/\r\n@media (max-width: 768px) {\r\n  #left-panel-container {\r\n    display : none;\r\n  }\r\n}\r\n", ""]);
 
 // exports
 
@@ -35708,17 +35549,13 @@ var _react2 = _interopRequireDefault(_react);
 
 var _rightTopMenu = __webpack_require__(206);
 
-<<<<<<< HEAD
-	__webpack_require__(210);
-=======
 var _rightTopMenu2 = _interopRequireDefault(_rightTopMenu);
->>>>>>> Resolve bug in npm
 
 var _rightContent = __webpack_require__(209);
 
 var _rightContent2 = _interopRequireDefault(_rightContent);
 
-__webpack_require__(215);
+__webpack_require__(217);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35853,7 +35690,7 @@ exports.default = RightContent;
 var content = __webpack_require__(208);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(15)(content, {});
+var update = __webpack_require__(14)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -35873,7 +35710,7 @@ if(false) {
 /* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(14)(undefined);
+exports = module.exports = __webpack_require__(13)(undefined);
 // imports
 
 
@@ -35910,6 +35747,8 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 __webpack_require__(213);
 
+__webpack_require__(215);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35919,6 +35758,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var token = false;
+var previousFeed = 0;
 
 var RightContent = function (_React$Component) {
   _inherits(RightContent, _React$Component);
@@ -35948,6 +35788,41 @@ var RightContent = function (_React$Component) {
     key: 'render',
     value: function render() {
       var _this2 = this;
+
+      var loadedDiv = '';
+      console.log("In render", previousFeed, this.props.feed['id']);
+      if (this.state.articles == [] || previousFeed !== (this.props.feed && this.props.feed['id'])) {
+
+        //Fetch Data
+        this._getFeedDataCont();
+
+        //Initlize Loaded Div
+        loadedDiv = _react2.default.createElement(
+          'div',
+          { className: 'row loader-container feed-content-container' },
+          _react2.default.createElement(
+            'div',
+            { className: 'loader' },
+            _react2.default.createElement('div', { className: 'loader__bar' }),
+            _react2.default.createElement('div', { className: 'loader__bar' }),
+            _react2.default.createElement('div', { className: 'loader__bar' }),
+            _react2.default.createElement('div', { className: 'loader__bar' }),
+            _react2.default.createElement('div', { className: 'loader__bar' }),
+            _react2.default.createElement('div', { className: 'loader__ball' }),
+            _react2.default.createElement(
+              'span',
+              null,
+              ' Loading ... '
+            )
+          )
+        );
+      } else {
+        loadedDiv = _react2.default.createElement(
+          'div',
+          { className: 'row feed-content-container' },
+          this.state && this.state.articles
+        );
+      }
 
       return _react2.default.createElement(
         'div',
@@ -35990,27 +35865,22 @@ var RightContent = function (_React$Component) {
               )
             )
           ),
-          _react2.default.createElement(
-            'div',
-            { className: 'row feed-content-container' },
-            this.state && this.state.articles
-          )
+          loadedDiv
         )
       );
     }
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this3 = this;
-
-      setInterval(function () {
-        if (!token) {
-          if (Object.keys(_this3.props.feed || {}).length !== 0) {
-            token = true;
-            _this3._getReqFeedArticles(_this3.props.feed['link']);
-          }
-        }
-      }, 4000);
+      this._getFeedDataCont();
+    }
+  }, {
+    key: '_getFeedDataCont',
+    value: function _getFeedDataCont() {
+      if (!token) {
+        token = true;
+        this._getReqFeedArticles(this.props.feed && this.props.feed['link'] || 'Empty');
+      }
     }
   }, {
     key: '_setDataTempelate',
@@ -36062,6 +35932,9 @@ var RightContent = function (_React$Component) {
         articlesTag.push(_react2.default.createElement(_feedArticle2.default, { value: articles[i] }));
       }
 
+      // save previous rendered feed
+      previousFeed = this.props.feed && this.props.feed['id'];
+
       this.setState({
         articles: articlesTag
       });
@@ -36069,7 +35942,7 @@ var RightContent = function (_React$Component) {
   }, {
     key: '_getReqFeedArticles',
     value: function _getReqFeedArticles(url) {
-      var _this4 = this;
+      var _this3 = this;
 
       console.log(url);
       var decodedUrl = encodeURIComponent(url);
@@ -36079,12 +35952,16 @@ var RightContent = function (_React$Component) {
         url: 'http://localhost:8080/feed/' + decodedUrl,
         data: ''
       }).error(function (err) {
+        _this3._getFeedDataCont();
         console.log('error Occuered', err);
         token = false;
       }).success(function (data) {
         console.log('Data Recieved', data);
-        _this4._setDataTempelate(data);
+        _this3._setDataTempelate(data);
         token = false;
+
+        // save previous rendered feed
+        previousFeed = _this3.props.feed && _this3.props.feed['id'];
       });
     }
   }]);
@@ -36127,15 +36004,32 @@ var Article = function (_React$Component) {
   function Article() {
     _classCallCheck(this, Article);
 
-    return _possibleConstructorReturn(this, (Article.__proto__ || Object.getPrototypeOf(Article)).call(this));
+    // Binding this to toggleStyle function
+    var _this = _possibleConstructorReturn(this, (Article.__proto__ || Object.getPrototypeOf(Article)).call(this));
+
+    _this._toggleStyle = _this._toggleStyle.bind(_this);
+
+    _this.state = {
+      articleExpandedClass: "article-expand-container article-hidden",
+      articleDisplayClassInd: 0,
+      articleDisplayClasses: ['article-expand-container article-expanded', 'article-expand-container article-hidden']
+    };
+    return _this;
   }
 
   _createClass(Article, [{
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
+      // Making images appear only when feed send image link for us
+      var imgTag = this.props.value.imgSrc ? _react2.default.createElement('img', { src: this.props.value.imgSrc }) : [];
+
       return _react2.default.createElement(
         'article',
-        null,
+        { onClick: function onClick() {
+            return _this2._toggleStyle();
+          } },
         _react2.default.createElement(
           'div',
           { className: 'article-container' },
@@ -36202,9 +36096,9 @@ var Article = function (_React$Component) {
         ),
         _react2.default.createElement(
           'div',
-          { className: 'article-expand-container' },
+          { className: this.state.articleExpandedClass },
           _react2.default.createElement(
-            'h1',
+            'h2',
             null,
             ' ',
             this.props.value.title,
@@ -36212,20 +36106,23 @@ var Article = function (_React$Component) {
           ),
           _react2.default.createElement(
             'div',
-            { className: 'article-image-container' },
-            _react2.default.createElement('img', { src: this.props.value.imgSrc })
-          ),
-          _react2.default.createElement(
-            'div',
             { className: 'article-expand-descp' },
-            _react2.default.createElement(
-              'span',
-              null,
-              this.props.value.descp
-            )
+            _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.value.content } })
           )
         )
       );
+    }
+  }, {
+    key: '_toggleStyle',
+    value: function _toggleStyle() {
+      var classes = this.state.articleDisplayClasses;
+      var index = this.state.articleDisplayClassInd++ % 2;
+      console.log(this.state.articleExpandedClass);
+      console.log(index);
+      this.setState({
+        articleExpandedClass: classes[index],
+        articleExpandedInd: index
+      });
     }
   }]);
 
@@ -36244,7 +36141,7 @@ exports.default = Article;
 var content = __webpack_require__(212);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(15)(content, {});
+var update = __webpack_require__(14)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -36264,438 +36161,15 @@ if(false) {
 /* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(14)(undefined);
+exports = module.exports = __webpack_require__(13)(undefined);
 // imports
 
-<<<<<<< HEAD
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _feedArticle = __webpack_require__(203);
-
-	var _feedArticle2 = _interopRequireDefault(_feedArticle);
-
-	var _jquery = __webpack_require__(178);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	__webpack_require__(206);
-
-	__webpack_require__(208);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var token = false;
-	var previousFeed = 0;
-
-	var RightContent = function (_React$Component) {
-	  _inherits(RightContent, _React$Component);
-
-	  function RightContent() {
-	    _classCallCheck(this, RightContent);
-
-	    var _this = _possibleConstructorReturn(this, (RightContent.__proto__ || Object.getPrototypeOf(RightContent)).call(this));
-
-	    _this._setDataTempelate = _this._setDataTempelate.bind(_this);
-
-	    return _this;
-	  }
-
-	  _createClass(RightContent, [{
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {
-	      this.state = {
-	        articles: []
-	      };
-
-	      if (Object.keys(this.props.feed || {}).length !== 0 && this.props.feed.constructor === Object) {
-	        this._getReqFeedArticles(this.props.feed['link']);
-	      }
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
-
-	      var loadedDiv = '';
-	      console.log("In render", previousFeed, this.props.feed['id']);
-	      if (this.state.articles == [] || previousFeed !== (this.props.feed && this.props.feed['id'])) {
-
-	        //Fetch Data
-	        this._getFeedDataCont();
-
-	        //Initlize Loaded Div
-	        loadedDiv = _react2.default.createElement(
-	          'div',
-	          { className: 'row loader-container feed-content-container' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'loader' },
-	            _react2.default.createElement('div', { className: 'loader__bar' }),
-	            _react2.default.createElement('div', { className: 'loader__bar' }),
-	            _react2.default.createElement('div', { className: 'loader__bar' }),
-	            _react2.default.createElement('div', { className: 'loader__bar' }),
-	            _react2.default.createElement('div', { className: 'loader__bar' }),
-	            _react2.default.createElement('div', { className: 'loader__ball' }),
-	            _react2.default.createElement(
-	              'span',
-	              null,
-	              ' Loading ... '
-	            )
-	          )
-	        );
-	      } else {
-	        loadedDiv = _react2.default.createElement(
-	          'div',
-	          { className: 'row feed-content-container' },
-	          this.state && this.state.articles
-	        );
-	      }
-
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'row', id: 'feed-container' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'fluid-container' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'feed-header-container' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'feed-header-left-container' },
-	              _react2.default.createElement('i', { className: 'fa fa-newspaper-o', 'aria-hidden': 'true' }),
-	              _react2.default.createElement(
-	                'span',
-	                { id: 'title' },
-	                this.props.feed && this.props.feed['name']
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'feed-header-right-container' },
-	              _react2.default.createElement(
-	                'button',
-	                { className: 'feed-header-right-btn', onClick: function onClick() {
-	                    if (_this2.props.feed) _this2.props.unsub(_this2.props.feed.id);
-	                  } },
-	                'Unsubscribe'
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { className: 'feed-header-right-btn' },
-	                'Show Unread'
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { className: 'feed-header-right-btn' },
-	                'Mark All As Unread'
-	              )
-	            )
-	          ),
-	          loadedDiv
-	        )
-	      );
-	    }
-	  }, {
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this._getFeedDataCont();
-	    }
-	  }, {
-	    key: '_getFeedDataCont',
-	    value: function _getFeedDataCont() {
-	      if (!token) {
-	        token = true;
-	        this._getReqFeedArticles(this.props.feed && this.props.feed['link'] || 'Empty');
-	      }
-	    }
-	  }, {
-	    key: '_setDataTempelate',
-	    value: function _setDataTempelate(articles) {
-	      var articlesTag = [];
-	      for (var i in articles) {
-	        var article = articles[i];
-
-	        // Making Article data Clear
-	        // Removing Extra tags from description
-	        var contentStr = article.content;
-
-	        // finding images src
-	        var tempDiv = document.createElement('div');
-	        tempDiv.innerHTML = contentStr;
-
-	        var tempData = (0, _jquery2.default)(tempDiv).text();
-
-	        var tempImgSrc = tempDiv.querySelector('img');
-	        tempImgSrc = tempImgSrc && tempImgSrc.getAttribute('src');
-
-	        // inja mitonim "srcSet" ro ham be dast birarim va responsive tar dorost konim.
-	        // Removing query parametrs from image links
-	        tempImgSrc = tempImgSrc && tempImgSrc.split("?")[0];
-
-	        // Converting Date String To Correct syntax
-	        var tempDate = new Date(article.published);
-	        var todayDate = new Date();
-	        var yesterdayDate = new Date(todayDate.setDate(todayDate.getDate() - 1));
-	        var tempDateStr = "";
-	        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-	        // reinitilizing the today date
-	        todayDate = new Date();
-
-	        if (tempDate.setHours(0, 0, 0, 0) == todayDate.setHours(0, 0, 0, 0)) {
-	          tempDateStr = "Today";
-	        } else if (tempDate.setHours(0, 0, 0, 0) == yesterdayDate.setHours(0, 0, 0, 0)) {
-	          tempDateStr = "Yesterday";
-	        } else {
-	          tempDateStr = monthNames[tempDate.getMonth()].toString() + " " + tempDate.getDay().toString();
-	        }
-
-	        // Creating new properties for each feed content
-	        article.descp = tempData;
-	        article.imgSrc = tempImgSrc;
-	        article.newDate = tempDateStr;
-
-	        articlesTag.push(_react2.default.createElement(_feedArticle2.default, { value: articles[i] }));
-	      }
-
-	      // save previous rendered feed
-	      previousFeed = this.props.feed && this.props.feed['id'];
-
-	      this.setState({
-	        articles: articlesTag
-	      });
-	    }
-	  }, {
-	    key: '_getReqFeedArticles',
-	    value: function _getReqFeedArticles(url) {
-	      var _this3 = this;
-
-	      console.log(url);
-	      var decodedUrl = encodeURIComponent(url);
-
-	      _jquery2.default.ajax({
-	        type: 'GET',
-	        url: 'http://localhost:8080/feed/' + decodedUrl,
-	        data: ''
-	      }).error(function (err) {
-	        _this3._getFeedDataCont();
-	        console.log('error Occuered', err);
-	        token = false;
-	      }).success(function (data) {
-	        console.log('Data Recieved', data);
-	        _this3._setDataTempelate(data);
-	        token = false;
-
-	        // save previous rendered feed
-	        previousFeed = _this3.props.feed && _this3.props.feed['id'];
-	      });
-	    }
-	  }]);
-
-	  return RightContent;
-	}(_react2.default.Component);
-
-	exports.default = RightContent;
-
-/***/ },
-/* 203 */
-/***/ function(module, exports, __webpack_require__) {
-=======
->>>>>>> Resolve bug in npm
 
 // module
-exports.push([module.i, "/* Each Article Setting */\r\narticle {\r\n  padding-top : 2px;\r\n  border-top : 1px solid #f7f7f7;\r\n  width: 100%;\r\n}\r\n\r\n.article-container {\r\n  display: table;\r\n  text-align: center;\r\n}\r\n\r\n.article-title-container {\r\n  display: table-cell;\r\n  width: 191px;\r\n  overflow: hidden;\r\n  height: 2em;\r\n  text-align: left;\r\n  vertical-align: middle;\r\n}\r\n\r\n.article-data-container {\r\n  height: 2em;\r\n  overflow: hidden;\r\n  display: block;\r\n  width: auto;\r\n  vertical-align: middle;\r\n  text-align: left;\r\n}\r\n\r\n.article-metadata-container {\r\n  display: table-cell;\r\n  width: 121px;\r\n  text-align: right;\r\n  vertical-align: middle;\r\n}\r\n\r\n.article-actions-container {\r\n  display: table-cell;\r\n  width: 110px;\r\n  vertical-align: middle;\r\n  text-align: center;\r\n}\r\n\r\n.article-data-description , .column-description {\r\n  line-height: 2em;\r\n  vertical-align: middle;\r\n}\r\n\r\n.article-data-description > span:nth-child(1) {\r\n  font-weight: bold\r\n}\r\n\r\n/* article expanded setting*/\r\n.article-expand-container {\r\n  text-align: center;\r\n  border: 1px solid #f7f7f7;\r\n  padding : 6px;\r\n  border-radius: 10px !important\r\n}\r\n\r\n.article-image-container img{\r\n    height: 300px;\r\n}\r\n\r\n.article-expand-descp {\r\n  text-align: left;\r\n  margin-top : 10px;\r\n}\r\n", ""]);
+exports.push([module.i, "/* Each Article Setting */\r\narticle {\r\n  padding-top : 2px;\r\n  border-top : 1px solid #f7f7f7;\r\n  width: 100%;\r\n}\r\n\r\n.article-container {\r\n  display: table;\r\n  text-align: center;\r\n}\r\n\r\n.article-title-container {\r\n  display: table-cell;\r\n  width: 191px;\r\n  overflow: hidden;\r\n  text-align: left;\r\n  vertical-align: middle;\r\n  padding : 0% 1% 0% 1%;\r\n}\r\n\r\n.article-title-container span {\r\n  max-width : 191px;\r\n  display: inline-block;\r\n  overflow: hidden;\r\n  vertical-align: middle;\r\n  height : 1.5em;\r\n  font-family: 13px;\r\n}\r\n\r\n.article-data-container {\r\n  overflow: hidden;\r\n  display: block;\r\n  height : 2em;\r\n  width: auto;\r\n  vertical-align: middle;\r\n  text-align: left;\r\n  padding-left: 2%;\r\n}\r\n\r\n.article-metadata-container {\r\n  display: table-cell;\r\n  width: 121px;\r\n  text-align: right;\r\n  vertical-align: middle;\r\n}\r\n\r\n.article-actions-container {\r\n  display: table-cell;\r\n  width: 110px;\r\n  vertical-align: middle;\r\n  text-align: center;\r\n}\r\n\r\n.article-data-description {\r\n  line-height: 2em;\r\n  vertical-align: middle;\r\n}\r\n\r\n.article-data-description > span {\r\n  border-left: 1px solid rgb(255, 144, 9);\r\n  padding-left: 2%;\r\n}\r\n.article-data-description > span:nth-child(1) {\r\n  font-weight: bold\r\n}\r\n\r\n.article-data-description > span:nth-child(2) {\r\n  font-weight: bold;\r\n  font-size : 12px;\r\n  opacity : 0.6;\r\n  margin-left: 1%;\r\n}\r\n\r\n/* article expanded setting*/\r\n.article-expand-container {\r\n  text-align: center;\r\n  border-left : 1px solid #ff9009;\r\n  padding : 20px;\r\n  color : #5e6b68;\r\n  display : none;\r\n}\r\n\r\n.article-expand-container h2 {\r\n  padding-left: 2%;\r\n  border-left : 10px solid #ff9009;\r\n  text-align : left;\r\n}\r\n\r\n.article-expand-descp {\r\n  margin-top : 10px;\r\n  padding : 0% 10% 0% 10%;\r\n  text-align: left;\r\n}\r\n\r\n.article-expand-descp img , .article-expand-descp figure {\r\n    text-align: center;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    display: block;\r\n    margin-bottom : 4px;\r\n    font-weight: bold;\r\n}\r\n\r\n.article-expand-descp img {\r\n    margin : 0px 10px 0px 10px;\r\n}\r\n\r\n.article-expand-descp p {\r\n  font-family : 'Fjord One' , seif;\r\n  font-size: 16px;\r\n}\r\n\r\n.article-expanded {\r\n  display : block;\r\n}\r\n\r\n.article-hidden {\r\n  display : none;\r\n}\r\n", ""]);
 
 // exports
 
-<<<<<<< HEAD
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	__webpack_require__(204);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Article = function (_React$Component) {
-	  _inherits(Article, _React$Component);
-
-	  function Article() {
-	    _classCallCheck(this, Article);
-
-	    // Binding this to toggleStyle function
-	    var _this = _possibleConstructorReturn(this, (Article.__proto__ || Object.getPrototypeOf(Article)).call(this));
-
-	    _this._toggleStyle = _this._toggleStyle.bind(_this);
-
-	    _this.state = {
-	      articleExpandedClass: "article-expand-container article-hidden",
-	      articleDisplayClassInd: 0,
-	      articleDisplayClasses: ['article-expand-container article-expanded', 'article-expand-container article-hidden']
-	    };
-	    return _this;
-	  }
-
-	  _createClass(Article, [{
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
-
-	      // Making images appear only when feed send image link for us
-	      var imgTag = this.props.value.imgSrc ? _react2.default.createElement('img', { src: this.props.value.imgSrc }) : [];
-
-	      return _react2.default.createElement(
-	        'article',
-	        { onClick: function onClick() {
-	            return _this2._toggleStyle();
-	          } },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'article-container' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'article-title-container' },
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'column-description' },
-	              this.props.value.feed.name
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'article-data-container' },
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'column-description article-data-description' },
-	              _react2.default.createElement(
-	                'span',
-	                null,
-	                this.props.value.title
-	              ),
-	              _react2.default.createElement(
-	                'span',
-	                null,
-	                this.props.value.descp
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'article-metadata-container' },
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'column-description' },
-	              ' ',
-	              this.props.value.newDate
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'article-actions-container' },
-	            _react2.default.createElement(
-	              'span',
-	              { className: 'column-description' },
-	              _react2.default.createElement(
-	                'a',
-	                null,
-	                _react2.default.createElement('i', { className: 'fa fa-check', 'aria-hidden': 'true' })
-	              ),
-	              _react2.default.createElement(
-	                'a',
-	                null,
-	                _react2.default.createElement('i', { className: 'fa fa-check', 'aria-hidden': 'true' })
-	              ),
-	              _react2.default.createElement(
-	                'a',
-	                null,
-	                _react2.default.createElement('i', { className: 'fa fa-check', 'aria-hidden': 'true' })
-	              )
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: this.state.articleExpandedClass },
-	          _react2.default.createElement(
-	            'h2',
-	            null,
-	            ' ',
-	            this.props.value.title,
-	            ' '
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'article-expand-descp' },
-	            _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.value.content } })
-	          )
-	        )
-	      );
-	    }
-	  }, {
-	    key: '_toggleStyle',
-	    value: function _toggleStyle() {
-	      var classes = this.state.articleDisplayClasses;
-	      var index = this.state.articleDisplayClassInd++ % 2;
-	      console.log(this.state.articleExpandedClass);
-	      console.log(index);
-	      this.setState({
-	        articleExpandedClass: classes[index],
-	        articleExpandedInd: index
-	      });
-	    }
-	  }]);
-
-	  return Article;
-	}(_react2.default.Component);
-
-	exports.default = Article;
-
-/***/ },
-/* 204 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(205);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(191)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!../../node_modules/css-loader/index.js!./feed-article.css", function() {
-				var newContent = require("!!../../node_modules/css-loader/index.js!./feed-article.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-=======
->>>>>>> Resolve bug in npm
 
 /***/ }),
 /* 213 */
@@ -36707,7 +36181,7 @@ exports.push([module.i, "/* Each Article Setting */\r\narticle {\r\n  padding-to
 var content = __webpack_require__(214);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(15)(content, {});
+var update = __webpack_require__(14)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -36723,16 +36197,11 @@ if(false) {
 	module.hot.dispose(function() { update(); });
 }
 
-<<<<<<< HEAD
-	// module
-	exports.push([module.id, "/* Each Article Setting */\r\narticle {\r\n  padding-top : 2px;\r\n  border-top : 1px solid #f7f7f7;\r\n  width: 100%;\r\n}\r\n\r\n.article-container {\r\n  display: table;\r\n  text-align: center;\r\n}\r\n\r\n.article-title-container {\r\n  display: table-cell;\r\n  width: 191px;\r\n  overflow: hidden;\r\n  text-align: left;\r\n  vertical-align: middle;\r\n  padding : 0% 1% 0% 1%;\r\n}\r\n\r\n.article-title-container span {\r\n  max-width : 191px;\r\n  display: inline-block;\r\n  overflow: hidden;\r\n  vertical-align: middle;\r\n  height : 1.5em;\r\n  font-family: 13px;\r\n}\r\n\r\n.article-data-container {\r\n  overflow: hidden;\r\n  display: block;\r\n  height : 2em;\r\n  width: auto;\r\n  vertical-align: middle;\r\n  text-align: left;\r\n  padding-left: 2%;\r\n}\r\n\r\n.article-metadata-container {\r\n  display: table-cell;\r\n  width: 121px;\r\n  text-align: right;\r\n  vertical-align: middle;\r\n}\r\n\r\n.article-actions-container {\r\n  display: table-cell;\r\n  width: 110px;\r\n  vertical-align: middle;\r\n  text-align: center;\r\n}\r\n\r\n.article-data-description {\r\n  line-height: 2em;\r\n  vertical-align: middle;\r\n}\r\n\r\n.article-data-description > span {\r\n  border-left: 1px solid rgb(255, 144, 9);\r\n  padding-left: 2%;\r\n}\r\n.article-data-description > span:nth-child(1) {\r\n  font-weight: bold\r\n}\r\n\r\n.article-data-description > span:nth-child(2) {\r\n  font-weight: bold;\r\n  font-size : 12px;\r\n  opacity : 0.6;\r\n  margin-left: 1%;\r\n}\r\n\r\n/* article expanded setting*/\r\n.article-expand-container {\r\n  text-align: center;\r\n  border-left : 1px solid #ff9009;\r\n  padding : 20px;\r\n  color : #5e6b68;\r\n  display : none;\r\n}\r\n\r\n.article-expand-container h2 {\r\n  padding-left: 2%;\r\n  border-left : 10px solid #ff9009;\r\n  text-align : left;\r\n}\r\n\r\n.article-expand-descp {\r\n  margin-top : 10px;\r\n  padding : 0% 10% 0% 10%;\r\n  text-align: left;\r\n}\r\n\r\n.article-expand-descp img , .article-expand-descp figure {\r\n    text-align: center;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    display: block;\r\n    margin-bottom : 4px;\r\n    font-weight: bold;\r\n}\r\n\r\n.article-expand-descp img {\r\n    margin : 0px 10px 0px 10px;\r\n}\r\n\r\n.article-expand-descp p {\r\n  font-family : 'Fjord One' , seif;\r\n  font-size: 16px;\r\n}\r\n\r\n.article-expanded {\r\n  display : block;\r\n}\r\n\r\n.article-hidden {\r\n  display : none;\r\n}\r\n", ""]);
-=======
 /***/ }),
 /* 214 */
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> Resolve bug in npm
 
-exports = module.exports = __webpack_require__(14)(undefined);
+exports = module.exports = __webpack_require__(13)(undefined);
 // imports
 
 
@@ -36752,7 +36221,47 @@ exports.push([module.i, "/* Right Main Panel*/\r\n#feed-container {\r\n  height:
 var content = __webpack_require__(216);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(15)(content, {});
+var update = __webpack_require__(14)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!./right-content-loader.css", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!./right-content-loader.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 216 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(13)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".loader-container {\r\n  height: 100%;\r\n  padding: 15% 10% 10% 10%;\r\n  top : 0%;\r\n  bottom : 0%;\r\n  background: white;\r\n  display: -webkit-box;\r\n  display: -ms-flexbox;\r\n  display: flex;\r\n  -webkit-box-align: center;\r\n      -ms-flex-align: center;\r\n          align-items: center;\r\n  -webkit-box-pack: center;\r\n      -ms-flex-pack: center;\r\n          justify-content: center;\r\n}\r\n\r\n.loader {\r\n  position: relative;\r\n  width: 75px;\r\n  height: 100px;\r\n  display: block;\r\n}\r\n\r\n.loader span {\r\n  font-family : 'Fjord One' , seif;\r\n  color : orange;\r\n  position: absolute;\r\n  bottom : -21%;\r\n  font-weight: bold;\r\n}\r\n\r\n.loader__bar {\r\n  position: absolute;\r\n  bottom: 0;\r\n  width: 10px;\r\n  height: 50%;\r\n  background: orange;\r\n  -webkit-transform-origin: center bottom;\r\n          transform-origin: center bottom;\r\n  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);\r\n}\r\n.loader__bar:nth-child(1) {\r\n  left: 0px;\r\n  -webkit-transform: scale(1, 0.2);\r\n          transform: scale(1, 0.2);\r\n  -webkit-animation: barUp1 4s infinite;\r\n          animation: barUp1 4s infinite;\r\n}\r\n.loader__bar:nth-child(2) {\r\n  left: 15px;\r\n  -webkit-transform: scale(1, 0.4);\r\n          transform: scale(1, 0.4);\r\n  -webkit-animation: barUp2 4s infinite;\r\n          animation: barUp2 4s infinite;\r\n}\r\n.loader__bar:nth-child(3) {\r\n  left: 30px;\r\n  -webkit-transform: scale(1, 0.6);\r\n          transform: scale(1, 0.6);\r\n  -webkit-animation: barUp3 4s infinite;\r\n          animation: barUp3 4s infinite;\r\n}\r\n.loader__bar:nth-child(4) {\r\n  left: 45px;\r\n  -webkit-transform: scale(1, 0.8);\r\n          transform: scale(1, 0.8);\r\n  -webkit-animation: barUp4 4s infinite;\r\n          animation: barUp4 4s infinite;\r\n}\r\n.loader__bar:nth-child(5) {\r\n  left: 60px;\r\n  -webkit-transform: scale(1, 1);\r\n          transform: scale(1, 1);\r\n  -webkit-animation: barUp5 4s infinite;\r\n          animation: barUp5 4s infinite;\r\n}\r\n.loader__ball {\r\n  position: absolute;\r\n  bottom: 10px;\r\n  left: 0;\r\n  width: 10px;\r\n  height: 10px;\r\n  background: orange;\r\n  border-radius: 50%;\r\n  -webkit-animation: ball 4s infinite;\r\n          animation: ball 4s infinite;\r\n}\r\n\r\n@-webkit-keyframes ball {\r\n  0% {\r\n    -webkit-transform: translate(0, 0);\r\n            transform: translate(0, 0);\r\n  }\r\n  5% {\r\n    -webkit-transform: translate(8px, -14px);\r\n            transform: translate(8px, -14px);\r\n  }\r\n  10% {\r\n    -webkit-transform: translate(15px, -10px);\r\n            transform: translate(15px, -10px);\r\n  }\r\n  17% {\r\n    -webkit-transform: translate(23px, -24px);\r\n            transform: translate(23px, -24px);\r\n  }\r\n  20% {\r\n    -webkit-transform: translate(30px, -20px);\r\n            transform: translate(30px, -20px);\r\n  }\r\n  27% {\r\n    -webkit-transform: translate(38px, -34px);\r\n            transform: translate(38px, -34px);\r\n  }\r\n  30% {\r\n    -webkit-transform: translate(45px, -30px);\r\n            transform: translate(45px, -30px);\r\n  }\r\n  37% {\r\n    -webkit-transform: translate(53px, -44px);\r\n            transform: translate(53px, -44px);\r\n  }\r\n  40% {\r\n    -webkit-transform: translate(60px, -40px);\r\n            transform: translate(60px, -40px);\r\n  }\r\n  50% {\r\n    -webkit-transform: translate(60px, 0);\r\n            transform: translate(60px, 0);\r\n  }\r\n  57% {\r\n    -webkit-transform: translate(53px, -14px);\r\n            transform: translate(53px, -14px);\r\n  }\r\n  60% {\r\n    -webkit-transform: translate(45px, -10px);\r\n            transform: translate(45px, -10px);\r\n  }\r\n  67% {\r\n    -webkit-transform: translate(37px, -24px);\r\n            transform: translate(37px, -24px);\r\n  }\r\n  70% {\r\n    -webkit-transform: translate(30px, -20px);\r\n            transform: translate(30px, -20px);\r\n  }\r\n  77% {\r\n    -webkit-transform: translate(22px, -34px);\r\n            transform: translate(22px, -34px);\r\n  }\r\n  80% {\r\n    -webkit-transform: translate(15px, -30px);\r\n            transform: translate(15px, -30px);\r\n  }\r\n  87% {\r\n    -webkit-transform: translate(7px, -44px);\r\n            transform: translate(7px, -44px);\r\n  }\r\n  90% {\r\n    -webkit-transform: translate(0, -40px);\r\n            transform: translate(0, -40px);\r\n  }\r\n  100% {\r\n    -webkit-transform: translate(0, 0);\r\n            transform: translate(0, 0);\r\n  }\r\n}\r\n\r\n@keyframes ball {\r\n  0% {\r\n    -webkit-transform: translate(0, 0);\r\n            transform: translate(0, 0);\r\n  }\r\n  5% {\r\n    -webkit-transform: translate(8px, -14px);\r\n            transform: translate(8px, -14px);\r\n  }\r\n  10% {\r\n    -webkit-transform: translate(15px, -10px);\r\n            transform: translate(15px, -10px);\r\n  }\r\n  17% {\r\n    -webkit-transform: translate(23px, -24px);\r\n            transform: translate(23px, -24px);\r\n  }\r\n  20% {\r\n    -webkit-transform: translate(30px, -20px);\r\n            transform: translate(30px, -20px);\r\n  }\r\n  27% {\r\n    -webkit-transform: translate(38px, -34px);\r\n            transform: translate(38px, -34px);\r\n  }\r\n  30% {\r\n    -webkit-transform: translate(45px, -30px);\r\n            transform: translate(45px, -30px);\r\n  }\r\n  37% {\r\n    -webkit-transform: translate(53px, -44px);\r\n            transform: translate(53px, -44px);\r\n  }\r\n  40% {\r\n    -webkit-transform: translate(60px, -40px);\r\n            transform: translate(60px, -40px);\r\n  }\r\n  50% {\r\n    -webkit-transform: translate(60px, 0);\r\n            transform: translate(60px, 0);\r\n  }\r\n  57% {\r\n    -webkit-transform: translate(53px, -14px);\r\n            transform: translate(53px, -14px);\r\n  }\r\n  60% {\r\n    -webkit-transform: translate(45px, -10px);\r\n            transform: translate(45px, -10px);\r\n  }\r\n  67% {\r\n    -webkit-transform: translate(37px, -24px);\r\n            transform: translate(37px, -24px);\r\n  }\r\n  70% {\r\n    -webkit-transform: translate(30px, -20px);\r\n            transform: translate(30px, -20px);\r\n  }\r\n  77% {\r\n    -webkit-transform: translate(22px, -34px);\r\n            transform: translate(22px, -34px);\r\n  }\r\n  80% {\r\n    -webkit-transform: translate(15px, -30px);\r\n            transform: translate(15px, -30px);\r\n  }\r\n  87% {\r\n    -webkit-transform: translate(7px, -44px);\r\n            transform: translate(7px, -44px);\r\n  }\r\n  90% {\r\n    -webkit-transform: translate(0, -40px);\r\n            transform: translate(0, -40px);\r\n  }\r\n  100% {\r\n    -webkit-transform: translate(0, 0);\r\n            transform: translate(0, 0);\r\n  }\r\n}\r\n@-webkit-keyframes barUp1 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n}\r\n@keyframes barUp1 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n}\r\n@-webkit-keyframes barUp2 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n}\r\n@keyframes barUp2 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n}\r\n@-webkit-keyframes barUp3 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.6);\r\n            transform: scale(1, 0.6);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.6);\r\n            transform: scale(1, 0.6);\r\n  }\r\n}\r\n@keyframes barUp3 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.6);\r\n            transform: scale(1, 0.6);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.6);\r\n            transform: scale(1, 0.6);\r\n  }\r\n}\r\n@-webkit-keyframes barUp4 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n}\r\n@keyframes barUp4 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n}\r\n@-webkit-keyframes barUp5 {\r\n  0% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n}\r\n@keyframes barUp5 {\r\n  0% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n}\r\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 217 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(218);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(14)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -36769,39 +36278,11 @@ if(false) {
 }
 
 /***/ }),
-/* 216 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
-<<<<<<< HEAD
-/***/ },
-/* 208 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(209);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(191)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!../../node_modules/css-loader/index.js!./right-content-loader.css", function() {
-				var newContent = require("!!../../node_modules/css-loader/index.js!./right-content-loader.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-=======
-exports = module.exports = __webpack_require__(14)(undefined);
+exports = module.exports = __webpack_require__(13)(undefined);
 // imports
->>>>>>> Resolve bug in npm
 
 
 // module
@@ -36809,89 +36290,18 @@ exports.push([module.i, "#right-panel-container {\r\n  margin-left : 270px;\r\n 
 
 // exports
 
-<<<<<<< HEAD
-	// module
-	exports.push([module.id, ".loader-container {\r\n  height: 100%;\r\n  padding: 15% 10% 10% 10%;\r\n  top : 0%;\r\n  bottom : 0%;\r\n  background: white;\r\n  display: -webkit-box;\r\n  display: -ms-flexbox;\r\n  display: flex;\r\n  -webkit-box-align: center;\r\n      -ms-flex-align: center;\r\n          align-items: center;\r\n  -webkit-box-pack: center;\r\n      -ms-flex-pack: center;\r\n          justify-content: center;\r\n}\r\n\r\n.loader {\r\n  position: relative;\r\n  width: 75px;\r\n  height: 100px;\r\n  display: block;\r\n}\r\n\r\n.loader span {\r\n  font-family : 'Fjord One' , seif;\r\n  color : orange;\r\n  position: absolute;\r\n  bottom : -21%;\r\n  font-weight: bold;\r\n}\r\n\r\n.loader__bar {\r\n  position: absolute;\r\n  bottom: 0;\r\n  width: 10px;\r\n  height: 50%;\r\n  background: orange;\r\n  -webkit-transform-origin: center bottom;\r\n          transform-origin: center bottom;\r\n  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);\r\n}\r\n.loader__bar:nth-child(1) {\r\n  left: 0px;\r\n  -webkit-transform: scale(1, 0.2);\r\n          transform: scale(1, 0.2);\r\n  -webkit-animation: barUp1 4s infinite;\r\n          animation: barUp1 4s infinite;\r\n}\r\n.loader__bar:nth-child(2) {\r\n  left: 15px;\r\n  -webkit-transform: scale(1, 0.4);\r\n          transform: scale(1, 0.4);\r\n  -webkit-animation: barUp2 4s infinite;\r\n          animation: barUp2 4s infinite;\r\n}\r\n.loader__bar:nth-child(3) {\r\n  left: 30px;\r\n  -webkit-transform: scale(1, 0.6);\r\n          transform: scale(1, 0.6);\r\n  -webkit-animation: barUp3 4s infinite;\r\n          animation: barUp3 4s infinite;\r\n}\r\n.loader__bar:nth-child(4) {\r\n  left: 45px;\r\n  -webkit-transform: scale(1, 0.8);\r\n          transform: scale(1, 0.8);\r\n  -webkit-animation: barUp4 4s infinite;\r\n          animation: barUp4 4s infinite;\r\n}\r\n.loader__bar:nth-child(5) {\r\n  left: 60px;\r\n  -webkit-transform: scale(1, 1);\r\n          transform: scale(1, 1);\r\n  -webkit-animation: barUp5 4s infinite;\r\n          animation: barUp5 4s infinite;\r\n}\r\n.loader__ball {\r\n  position: absolute;\r\n  bottom: 10px;\r\n  left: 0;\r\n  width: 10px;\r\n  height: 10px;\r\n  background: orange;\r\n  border-radius: 50%;\r\n  -webkit-animation: ball 4s infinite;\r\n          animation: ball 4s infinite;\r\n}\r\n\r\n@-webkit-keyframes ball {\r\n  0% {\r\n    -webkit-transform: translate(0, 0);\r\n            transform: translate(0, 0);\r\n  }\r\n  5% {\r\n    -webkit-transform: translate(8px, -14px);\r\n            transform: translate(8px, -14px);\r\n  }\r\n  10% {\r\n    -webkit-transform: translate(15px, -10px);\r\n            transform: translate(15px, -10px);\r\n  }\r\n  17% {\r\n    -webkit-transform: translate(23px, -24px);\r\n            transform: translate(23px, -24px);\r\n  }\r\n  20% {\r\n    -webkit-transform: translate(30px, -20px);\r\n            transform: translate(30px, -20px);\r\n  }\r\n  27% {\r\n    -webkit-transform: translate(38px, -34px);\r\n            transform: translate(38px, -34px);\r\n  }\r\n  30% {\r\n    -webkit-transform: translate(45px, -30px);\r\n            transform: translate(45px, -30px);\r\n  }\r\n  37% {\r\n    -webkit-transform: translate(53px, -44px);\r\n            transform: translate(53px, -44px);\r\n  }\r\n  40% {\r\n    -webkit-transform: translate(60px, -40px);\r\n            transform: translate(60px, -40px);\r\n  }\r\n  50% {\r\n    -webkit-transform: translate(60px, 0);\r\n            transform: translate(60px, 0);\r\n  }\r\n  57% {\r\n    -webkit-transform: translate(53px, -14px);\r\n            transform: translate(53px, -14px);\r\n  }\r\n  60% {\r\n    -webkit-transform: translate(45px, -10px);\r\n            transform: translate(45px, -10px);\r\n  }\r\n  67% {\r\n    -webkit-transform: translate(37px, -24px);\r\n            transform: translate(37px, -24px);\r\n  }\r\n  70% {\r\n    -webkit-transform: translate(30px, -20px);\r\n            transform: translate(30px, -20px);\r\n  }\r\n  77% {\r\n    -webkit-transform: translate(22px, -34px);\r\n            transform: translate(22px, -34px);\r\n  }\r\n  80% {\r\n    -webkit-transform: translate(15px, -30px);\r\n            transform: translate(15px, -30px);\r\n  }\r\n  87% {\r\n    -webkit-transform: translate(7px, -44px);\r\n            transform: translate(7px, -44px);\r\n  }\r\n  90% {\r\n    -webkit-transform: translate(0, -40px);\r\n            transform: translate(0, -40px);\r\n  }\r\n  100% {\r\n    -webkit-transform: translate(0, 0);\r\n            transform: translate(0, 0);\r\n  }\r\n}\r\n\r\n@keyframes ball {\r\n  0% {\r\n    -webkit-transform: translate(0, 0);\r\n            transform: translate(0, 0);\r\n  }\r\n  5% {\r\n    -webkit-transform: translate(8px, -14px);\r\n            transform: translate(8px, -14px);\r\n  }\r\n  10% {\r\n    -webkit-transform: translate(15px, -10px);\r\n            transform: translate(15px, -10px);\r\n  }\r\n  17% {\r\n    -webkit-transform: translate(23px, -24px);\r\n            transform: translate(23px, -24px);\r\n  }\r\n  20% {\r\n    -webkit-transform: translate(30px, -20px);\r\n            transform: translate(30px, -20px);\r\n  }\r\n  27% {\r\n    -webkit-transform: translate(38px, -34px);\r\n            transform: translate(38px, -34px);\r\n  }\r\n  30% {\r\n    -webkit-transform: translate(45px, -30px);\r\n            transform: translate(45px, -30px);\r\n  }\r\n  37% {\r\n    -webkit-transform: translate(53px, -44px);\r\n            transform: translate(53px, -44px);\r\n  }\r\n  40% {\r\n    -webkit-transform: translate(60px, -40px);\r\n            transform: translate(60px, -40px);\r\n  }\r\n  50% {\r\n    -webkit-transform: translate(60px, 0);\r\n            transform: translate(60px, 0);\r\n  }\r\n  57% {\r\n    -webkit-transform: translate(53px, -14px);\r\n            transform: translate(53px, -14px);\r\n  }\r\n  60% {\r\n    -webkit-transform: translate(45px, -10px);\r\n            transform: translate(45px, -10px);\r\n  }\r\n  67% {\r\n    -webkit-transform: translate(37px, -24px);\r\n            transform: translate(37px, -24px);\r\n  }\r\n  70% {\r\n    -webkit-transform: translate(30px, -20px);\r\n            transform: translate(30px, -20px);\r\n  }\r\n  77% {\r\n    -webkit-transform: translate(22px, -34px);\r\n            transform: translate(22px, -34px);\r\n  }\r\n  80% {\r\n    -webkit-transform: translate(15px, -30px);\r\n            transform: translate(15px, -30px);\r\n  }\r\n  87% {\r\n    -webkit-transform: translate(7px, -44px);\r\n            transform: translate(7px, -44px);\r\n  }\r\n  90% {\r\n    -webkit-transform: translate(0, -40px);\r\n            transform: translate(0, -40px);\r\n  }\r\n  100% {\r\n    -webkit-transform: translate(0, 0);\r\n            transform: translate(0, 0);\r\n  }\r\n}\r\n@-webkit-keyframes barUp1 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n}\r\n@keyframes barUp1 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n}\r\n@-webkit-keyframes barUp2 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n}\r\n@keyframes barUp2 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n}\r\n@-webkit-keyframes barUp3 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.6);\r\n            transform: scale(1, 0.6);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.6);\r\n            transform: scale(1, 0.6);\r\n  }\r\n}\r\n@keyframes barUp3 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.6);\r\n            transform: scale(1, 0.6);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.6);\r\n            transform: scale(1, 0.6);\r\n  }\r\n}\r\n@-webkit-keyframes barUp4 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n}\r\n@keyframes barUp4 {\r\n  0% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 0.4);\r\n            transform: scale(1, 0.4);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 0.8);\r\n            transform: scale(1, 0.8);\r\n  }\r\n}\r\n@-webkit-keyframes barUp5 {\r\n  0% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n}\r\n@keyframes barUp5 {\r\n  0% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  40% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n  50% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  90% {\r\n    -webkit-transform: scale(1, 0.2);\r\n            transform: scale(1, 0.2);\r\n  }\r\n  100% {\r\n    -webkit-transform: scale(1, 1);\r\n            transform: scale(1, 1);\r\n  }\r\n}\r\n", ""]);
-=======
->>>>>>> Resolve bug in npm
 
 /***/ }),
-/* 217 */
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
-<<<<<<< HEAD
-/***/ },
-/* 210 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(211);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(191)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!../../node_modules/css-loader/index.js!./right-panel.css", function() {
-				var newContent = require("!!../../node_modules/css-loader/index.js!./right-panel.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 211 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(186)(undefined);
-	// imports
-
-
-	// module
-	exports.push([module.id, "#right-panel-container {\r\n  margin-left : 270px;\r\n  position : relative;\r\n  height: 100%;\r\n}\r\n\r\n\r\n/* Medium Displays */\r\n@media (max-width: 768px) {\r\n  #right-panel-container {\r\n    margin-left : 0px;\r\n    position : relative;\r\n  }\r\n}\r\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 212 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(213);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(191)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!../../node_modules/css-loader/index.js!./layout.css", function() {
-				var newContent = require("!!../../node_modules/css-loader/index.js!./layout.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-=======
 // load the styles
-var content = __webpack_require__(218);
+var content = __webpack_require__(220);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(15)(content, {});
+var update = __webpack_require__(14)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -36902,23 +36312,16 @@ if(false) {
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
->>>>>>> Resolve bug in npm
 	}
 	// When the module is disposed, remove the <style> tags
 	module.hot.dispose(function() { update(); });
 }
 
-<<<<<<< HEAD
-/***/ },
-/* 213 */
-/***/ function(module, exports, __webpack_require__) {
-=======
 /***/ }),
-/* 218 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
->>>>>>> Resolve bug in npm
 
-exports = module.exports = __webpack_require__(14)(undefined);
+exports = module.exports = __webpack_require__(13)(undefined);
 // imports
 
 
