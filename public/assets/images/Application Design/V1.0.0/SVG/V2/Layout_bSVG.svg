@@ -1,0 +1,14 @@
+<svg width="960" height="1366" viewBox="0 0 960 1366" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>iPad Pro</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(526 3628)">
+<clipPath id="clip-0" clip-rule="evenodd">
+<path d="M -526 -3628L 434 -3628L 434 -2262L -526 -2262L -526 -3628Z" fill="#FFFFFF"/>
+</clipPath>
+<g id="iPad Pro" clip-path="url(#clip-0)">
+<path d="M -526 -3628L 434 -3628L 434 -2262L -526 -2262L -526 -3628Z" fill="#FFFFFF"/>
+</g>
+</g>
+<defs>
+</defs>
+</svg>

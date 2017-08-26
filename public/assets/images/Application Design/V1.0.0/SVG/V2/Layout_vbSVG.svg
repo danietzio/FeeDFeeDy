@@ -1,0 +1,14 @@
+<svg width="1366" height="1024" viewBox="0 0 1366 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>Desktop</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(520 1971)">
+<clipPath id="clip-0" clip-rule="evenodd">
+<path d="M -520 -1971L 846 -1971L 846 -947L -520 -947L -520 -1971Z" fill="#FFFFFF"/>
+</clipPath>
+<g id="Desktop" clip-path="url(#clip-0)">
+<path d="M -520 -1971L 846 -1971L 846 -947L -520 -947L -520 -1971Z" fill="#FFFFFF"/>
+</g>
+</g>
+<defs>
+</defs>
+</svg>
