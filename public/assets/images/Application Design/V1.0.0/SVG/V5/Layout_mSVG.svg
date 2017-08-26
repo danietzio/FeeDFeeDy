@@ -1,0 +1,14 @@
+<svg width="768" height="960" viewBox="0 0 768 960" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>7&#34; Tablet</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(526 4801)">
+<clipPath id="clip-0" clip-rule="evenodd">
+<path d="M -526 -4801L 242 -4801L 242 -3841L -526 -3841L -526 -4801Z" fill="#FFFFFF"/>
+</clipPath>
+<g id="7&#34; Tablet" clip-path="url(#clip-0)">
+<path d="M -526 -4801L 242 -4801L 242 -3841L -526 -3841L -526 -4801Z" fill="#FFFFFF"/>
+</g>
+</g>
+<defs>
+</defs>
+</svg>
