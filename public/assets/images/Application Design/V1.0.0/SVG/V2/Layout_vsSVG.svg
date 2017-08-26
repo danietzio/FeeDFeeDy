@@ -1,228 +1,230 @@
 <svg width="960" height="1704" viewBox="0 0 960 1704" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <title>Layout_</title>
 <desc>Created using Figma</desc>
-<g id="Canvas" transform="matrix(3 0 0 3 27 19242)">
+<g id="Canvas" transform="matrix(3 0 0 3 27 21267)">
 <clipPath id="clip-0" clip-rule="evenodd">
-<path d="M -9 -6414L 311 -6414L 311 -5846L -9 -5846L -9 -6414Z" fill="#FFFFFF"/>
+<path d="M -9 -7089L 311 -7089L 311 -6521L -9 -6521L -9 -7089Z" fill="#FFFFFF"/>
 </clipPath>
 <g id="Layout_" clip-path="url(#clip-0)">
-<path d="M -9 -6414L 311 -6414L 311 -5846L -9 -5846L -9 -6414Z" fill="#3C3C3C"/>
+<path d="M -9 -7089L 311 -7089L 311 -6521L -9 -6521L -9 -7089Z" fill="#3C3C3C"/>
 <g id="BBC">
 <g id="Rectangle">
-<use xlink:href="#path0_fill" transform="translate(81 -6383)" fill="#565656" fill-opacity="0.1"/>
+<use xlink:href="#path0_fill" transform="translate(81 -7058)" fill="#565656" fill-opacity="0.1"/>
 <mask id="mask0_outline_ins">
-<use xlink:href="#path0_fill" fill="white" transform="translate(81 -6383)"/>
+<use xlink:href="#path0_fill" fill="white" transform="translate(81 -7058)"/>
 </mask>
 <g mask="url(#mask0_outline_ins)">
-<use xlink:href="#path1_stroke_2x" transform="translate(81 -6383)" fill="#414141" fill-opacity="0.28"/>
+<use xlink:href="#path1_stroke_2x" transform="translate(81 -7058)" fill="#414141" fill-opacity="0.28"/>
 </g>
 </g>
 <g id="Rectangle">
-<use xlink:href="#path0_fill" transform="translate(73 -6375)" fill="#565656" fill-opacity="0.2"/>
+<use xlink:href="#path0_fill" transform="translate(73 -7050)" fill="#565656" fill-opacity="0.2"/>
 <mask id="mask1_outline_ins">
-<use xlink:href="#path0_fill" fill="white" transform="translate(73 -6375)"/>
+<use xlink:href="#path0_fill" fill="white" transform="translate(73 -7050)"/>
 </mask>
 <g mask="url(#mask1_outline_ins)">
-<use xlink:href="#path1_stroke_2x" transform="translate(73 -6375)" fill="#3B3B3B" fill-opacity="0.28"/>
+<use xlink:href="#path1_stroke_2x" transform="translate(73 -7050)" fill="#3B3B3B" fill-opacity="0.28"/>
 </g>
 </g>
 <g id="Rectangle">
-<use xlink:href="#path2_fill" transform="translate(64 -6366)" fill="#565656" fill-opacity="0.28"/>
+<use xlink:href="#path2_fill" transform="translate(64 -7041)" fill="#565656" fill-opacity="0.28"/>
 <mask id="mask2_outline_ins">
-<use xlink:href="#path2_fill" fill="white" transform="translate(64 -6366)"/>
+<use xlink:href="#path2_fill" fill="white" transform="translate(64 -7041)"/>
 </mask>
 <g mask="url(#mask2_outline_ins)">
-<use xlink:href="#path3_stroke_2x" transform="translate(64 -6366)" fill="#262626" fill-opacity="0.28"/>
+<use xlink:href="#path3_stroke_2x" transform="translate(64 -7041)" fill="#262626" fill-opacity="0.28"/>
 </g>
 </g>
 <g id="Rectangle">
-<use xlink:href="#path2_fill" transform="translate(56 -6358)" fill="#565656" fill-opacity="0.34"/>
+<use xlink:href="#path2_fill" transform="translate(56 -7033)" fill="#565656" fill-opacity="0.34"/>
 <mask id="mask3_outline_ins">
-<use xlink:href="#path2_fill" fill="white" transform="translate(56 -6358)"/>
+<use xlink:href="#path2_fill" fill="white" transform="translate(56 -7033)"/>
 </mask>
 <g mask="url(#mask3_outline_ins)">
-<use xlink:href="#path3_stroke_2x" transform="translate(56 -6358)" fill="#262626" fill-opacity="0.28"/>
+<use xlink:href="#path3_stroke_2x" transform="translate(56 -7033)" fill="#262626" fill-opacity="0.28"/>
 </g>
 </g>
 <g id="Rectangle">
-<use xlink:href="#path2_fill" transform="translate(48 -6349)" fill="#56805A" fill-opacity="0.42"/>
+<use xlink:href="#path2_fill" transform="translate(48 -7024)" fill="#56805A" fill-opacity="0.42"/>
 <mask id="mask4_outline_ins">
-<use xlink:href="#path2_fill" fill="white" transform="translate(48 -6349)"/>
+<use xlink:href="#path2_fill" fill="white" transform="translate(48 -7024)"/>
 </mask>
 <g mask="url(#mask4_outline_ins)">
-<use xlink:href="#path3_stroke_2x" transform="translate(48 -6349)" fill="#262626" fill-opacity="0.28"/>
+<use xlink:href="#path3_stroke_2x" transform="translate(48 -7024)" fill="#262626" fill-opacity="0.28"/>
 </g>
 </g>
 <g id="Rectangle">
-<use xlink:href="#path2_fill" transform="translate(40 -6341)" fill="#56805A" fill-opacity="0.5"/>
+<use xlink:href="#path2_fill" transform="translate(40 -7016)" fill="#56805A" fill-opacity="0.5"/>
 <mask id="mask5_outline_ins">
-<use xlink:href="#path2_fill" fill="white" transform="translate(40 -6341)"/>
+<use xlink:href="#path2_fill" fill="white" transform="translate(40 -7016)"/>
 </mask>
 <g mask="url(#mask5_outline_ins)">
-<use xlink:href="#path3_stroke_2x" transform="translate(40 -6341)" fill="#262626" fill-opacity="0.28"/>
+<use xlink:href="#path3_stroke_2x" transform="translate(40 -7016)" fill="#262626" fill-opacity="0.28"/>
 </g>
 </g>
 <g id="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec,">
-<use xlink:href="#path4_fill" transform="translate(59 -6287)" fill="#FFFFFF" fill-opacity="0.1"/>
+<use xlink:href="#path4_fill" transform="translate(59 -6962)" fill="#FFFFFF" fill-opacity="0.1"/>
 </g>
 <g id="Today">
-<use xlink:href="#path5_fill" transform="translate(195 -6325)" fill="#FFFFFF" fill-opacity="0.2"/>
+<use xlink:href="#path5_fill" transform="translate(195 -7000)" fill="#FFFFFF" fill-opacity="0.2"/>
 </g>
 <g id="19.27 PM">
-<use xlink:href="#path6_fill" transform="translate(159 -6329)" fill="#FFFFFF" fill-opacity="0.2"/>
+<use xlink:href="#path6_fill" transform="translate(159 -7004)" fill="#FFFFFF" fill-opacity="0.2"/>
 </g>
 <g id="BBC News">
-<use xlink:href="#path7_fill" transform="translate(59 -6325)" fill="#FFFFFF" fill-opacity="0.2"/>
+<use xlink:href="#path7_fill" transform="translate(59 -7000)" fill="#FFFFFF" fill-opacity="0.2"/>
 </g>
 <g id="Front">
 <g id="Rectangle">
-<use xlink:href="#path0_fill" transform="translate(33 -6333)" fill="#4B4B4B" fill-opacity="0.56"/>
+<use xlink:href="#path0_fill" transform="translate(33 -7008)" fill="#4B4B4B" fill-opacity="0.56"/>
 <mask id="mask6_outline_ins">
-<use xlink:href="#path0_fill" fill="white" transform="translate(33 -6333)"/>
+<use xlink:href="#path0_fill" fill="white" transform="translate(33 -7008)"/>
 </mask>
 <g mask="url(#mask6_outline_ins)">
-<use xlink:href="#path1_stroke_2x" transform="translate(33 -6333)" fill="#4B4B4B" fill-opacity="0.66"/>
+<use xlink:href="#path1_stroke_2x" transform="translate(33 -7008)" fill="#4B4B4B" fill-opacity="0.66"/>
 </g>
 </g>
 <g id="BBC News">
-<use xlink:href="#path8_fill" transform="translate(49.1846 -6310)" fill="#FFFFFF"/>
+<use xlink:href="#path8_fill" transform="translate(49.1846 -6985)" fill="#FFFFFF"/>
 </g>
 <g id="The British Broadcasting Corporation (BBC) is a British public service broadcaster headquartered at Broadcasting House in London. The BBC is the world&#39;s oldest national broadcasting organisation[4] and the largest broadcaster in the world by number of employees.">
-<use xlink:href="#path9_fill" transform="translate(49 -6284)" fill="#FFFFFF"/>
+<use xlink:href="#path9_fill" transform="translate(49 -6959)" fill="#FFFFFF"/>
 </g>
 <g id="UnSub">
 <g id="Vector">
-<use xlink:href="#path10_stroke" transform="matrix(0.707108 0.707105 -0.707108 0.707105 211.5 -6302)" fill="#FFCC00"/>
+<use xlink:href="#path10_stroke" transform="matrix(0.707108 0.707105 -0.707108 0.707105 211.5 -6977)" fill="#FFCC00"/>
 </g>
 <g id="Vector">
-<use xlink:href="#path10_stroke" transform="matrix(0.707108 -0.707105 0.707108 0.707105 211.5 -6294)" fill="#FFCC00"/>
+<use xlink:href="#path10_stroke" transform="matrix(0.707108 -0.707105 0.707108 0.707105 211.5 -6969)" fill="#FFCC00"/>
 </g>
 </g>
 </g>
 </g>
 <g id="Techrunch">
 <g id="Rectangle">
-<use xlink:href="#path0_fill" transform="translate(81 -6118)" fill="#565656" fill-opacity="0.15"/>
+<use xlink:href="#path0_fill" transform="translate(81 -6793)" fill="#565656" fill-opacity="0.15"/>
 <mask id="mask7_outline_ins">
-<use xlink:href="#path0_fill" fill="white" transform="translate(81 -6118)"/>
+<use xlink:href="#path0_fill" fill="white" transform="translate(81 -6793)"/>
 </mask>
 <g mask="url(#mask7_outline_ins)">
-<use xlink:href="#path1_stroke_2x" transform="translate(81 -6118)" fill="#414141" fill-opacity="0.28"/>
+<use xlink:href="#path1_stroke_2x" transform="translate(81 -6793)" fill="#414141" fill-opacity="0.28"/>
 </g>
 </g>
 <g id="Rectangle">
-<use xlink:href="#path0_fill" transform="translate(73 -6109)" fill="#565656" fill-opacity="0.24"/>
+<use xlink:href="#path0_fill" transform="translate(73 -6784)" fill="#565656" fill-opacity="0.24"/>
 <mask id="mask8_outline_ins">
-<use xlink:href="#path0_fill" fill="white" transform="translate(73 -6109)"/>
+<use xlink:href="#path0_fill" fill="white" transform="translate(73 -6784)"/>
 </mask>
 <g mask="url(#mask8_outline_ins)">
-<use xlink:href="#path1_stroke_2x" transform="translate(73 -6109)" fill="#3B3B3B" fill-opacity="0.28"/>
+<use xlink:href="#path1_stroke_2x" transform="translate(73 -6784)" fill="#3B3B3B" fill-opacity="0.28"/>
 </g>
 </g>
 <g id="Rectangle">
-<use xlink:href="#path2_fill" transform="translate(64 -6101)" fill="#56805A" fill-opacity="0.3"/>
+<use xlink:href="#path2_fill" transform="translate(64 -6776)" fill="#56805A" fill-opacity="0.3"/>
 <mask id="mask9_outline_ins">
-<use xlink:href="#path2_fill" fill="white" transform="translate(64 -6101)"/>
+<use xlink:href="#path2_fill" fill="white" transform="translate(64 -6776)"/>
 </mask>
 <g mask="url(#mask9_outline_ins)">
-<use xlink:href="#path3_stroke_2x" transform="translate(64 -6101)" fill="#262626" fill-opacity="0.28"/>
+<use xlink:href="#path3_stroke_2x" transform="translate(64 -6776)" fill="#262626" fill-opacity="0.28"/>
 </g>
 </g>
 <g id="Rectangle">
-<use xlink:href="#path2_fill" transform="translate(56 -6093)" fill="#56805A" fill-opacity="0.34"/>
+<use xlink:href="#path2_fill" transform="translate(56 -6768)" fill="#56805A" fill-opacity="0.34"/>
 <mask id="mask10_outline_ins">
-<use xlink:href="#path2_fill" fill="white" transform="translate(56 -6093)"/>
+<use xlink:href="#path2_fill" fill="white" transform="translate(56 -6768)"/>
 </mask>
 <g mask="url(#mask10_outline_ins)">
-<use xlink:href="#path3_stroke_2x" transform="translate(56 -6093)" fill="#262626" fill-opacity="0.28"/>
+<use xlink:href="#path3_stroke_2x" transform="translate(56 -6768)" fill="#262626" fill-opacity="0.28"/>
 </g>
 </g>
 <g id="Rectangle">
-<use xlink:href="#path2_fill" transform="translate(48 -6084)" fill="#56805A" fill-opacity="0.42"/>
+<use xlink:href="#path2_fill" transform="translate(48 -6759)" fill="#56805A" fill-opacity="0.42"/>
 <mask id="mask11_outline_ins">
-<use xlink:href="#path2_fill" fill="white" transform="translate(48 -6084)"/>
+<use xlink:href="#path2_fill" fill="white" transform="translate(48 -6759)"/>
 </mask>
 <g mask="url(#mask11_outline_ins)">
-<use xlink:href="#path3_stroke_2x" transform="translate(48 -6084)" fill="#262626" fill-opacity="0.28"/>
+<use xlink:href="#path3_stroke_2x" transform="translate(48 -6759)" fill="#262626" fill-opacity="0.28"/>
 </g>
 </g>
 <g id="Rectangle">
-<use xlink:href="#path2_fill" transform="translate(40 -6076)" fill="#56805A" fill-opacity="0.5"/>
+<use xlink:href="#path2_fill" transform="translate(40 -6751)" fill="#56805A" fill-opacity="0.5"/>
 <mask id="mask12_outline_ins">
-<use xlink:href="#path2_fill" fill="white" transform="translate(40 -6076)"/>
+<use xlink:href="#path2_fill" fill="white" transform="translate(40 -6751)"/>
 </mask>
 <g mask="url(#mask12_outline_ins)">
-<use xlink:href="#path3_stroke_2x" transform="translate(40 -6076)" fill="#262626" fill-opacity="0.28"/>
+<use xlink:href="#path3_stroke_2x" transform="translate(40 -6751)" fill="#262626" fill-opacity="0.28"/>
 </g>
 </g>
 <g id="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec,">
-<use xlink:href="#path4_fill" transform="translate(58 -6018)" fill="#FFFFFF" fill-opacity="0.1"/>
+<use xlink:href="#path4_fill" transform="translate(58 -6693)" fill="#FFFFFF" fill-opacity="0.1"/>
 </g>
 <g id="Today">
-<use xlink:href="#path5_fill" transform="translate(194 -6056)" fill="#FFFFFF" fill-opacity="0.2"/>
+<use xlink:href="#path5_fill" transform="translate(194 -6731)" fill="#FFFFFF" fill-opacity="0.2"/>
 </g>
 <g id="22.10 PM">
-<use xlink:href="#path11_fill" transform="translate(158 -6060)" fill="#FFFFFF" fill-opacity="0.2"/>
+<use xlink:href="#path11_fill" transform="translate(158 -6735)" fill="#FFFFFF" fill-opacity="0.2"/>
 </g>
 <g id="Techrunch">
-<use xlink:href="#path12_fill" transform="translate(57 -6056)" fill="#FFFFFF" fill-opacity="0.2"/>
+<use xlink:href="#path12_fill" transform="translate(57 -6731)" fill="#FFFFFF" fill-opacity="0.2"/>
 </g>
 <g id="Front">
 <g id="Rectangle">
-<use xlink:href="#path0_fill" transform="translate(33 -6068)" fill="#4B4B4B" fill-opacity="0.56"/>
+<use xlink:href="#path0_fill" transform="translate(33 -6743)" fill="#4B4B4B" fill-opacity="0.56"/>
 <mask id="mask13_outline_ins">
-<use xlink:href="#path0_fill" fill="white" transform="translate(33 -6068)"/>
+<use xlink:href="#path0_fill" fill="white" transform="translate(33 -6743)"/>
 </mask>
 <g mask="url(#mask13_outline_ins)">
-<use xlink:href="#path1_stroke_2x" transform="translate(33 -6068)" fill="#4B4B4B" fill-opacity="0.66"/>
+<use xlink:href="#path1_stroke_2x" transform="translate(33 -6743)" fill="#4B4B4B" fill-opacity="0.66"/>
 </g>
 </g>
 <g id="Techrunch">
-<use xlink:href="#path13_fill" transform="translate(46 -6046)" fill="#FFFFFF"/>
+<use xlink:href="#path13_fill" transform="translate(46 -6721)" fill="#FFFFFF"/>
 </g>
 <g id="TechCrunch is an American online publisher of technology industry news. It primarily covers the business side of tech, reporting breaking tech news, bold opinions on new products, thorough analysis of emerging trends in tech, and regular profiling of popular new tech businesses, from early stage.">
-<use xlink:href="#path14_fill" transform="translate(49 -6018)" fill="#FFFFFF"/>
+<use xlink:href="#path14_fill" transform="translate(49 -6693)" fill="#FFFFFF"/>
 </g>
 <g id="UnSub">
 <g id="Vector">
-<use xlink:href="#path15_stroke" transform="matrix(0.707108 0.707105 -0.707108 0.707105 211.5 -6036)" fill="#FFCC00"/>
+<use xlink:href="#path15_stroke" transform="matrix(0.707108 0.707105 -0.707108 0.707105 211.5 -6711)" fill="#FFCC00"/>
 </g>
 <g id="Vector">
-<use xlink:href="#path15_stroke" transform="matrix(0.707108 -0.707105 0.707108 0.707105 211.5 -6028)" fill="#FFCC00"/>
+<use xlink:href="#path15_stroke" transform="matrix(0.707108 -0.707105 0.707108 0.707105 211.5 -6703)" fill="#FFCC00"/>
 </g>
 </g>
 </g>
 </g>
 <g id="Menu">
 <g id="Rectangle 3">
-<use xlink:href="#path16_fill" transform="translate(1 -6382)" fill="#FFFFFF" fill-opacity="0.63"/>
+<use xlink:href="#path16_fill" transform="translate(1 -7057)" fill="#FFFFFF" fill-opacity="0.63"/>
 </g>
 <g id="Rectangle 3">
-<use xlink:href="#path16_fill" transform="translate(1 -6376)" fill="#FFFFFF" fill-opacity="0.63"/>
+<use xlink:href="#path16_fill" transform="translate(1 -7051)" fill="#FFFFFF" fill-opacity="0.63"/>
 </g>
 <g id="Rectangle 3">
-<use xlink:href="#path16_fill" transform="translate(1 -6370)" fill="#FFFFFF" fill-opacity="0.63"/>
+<use xlink:href="#path16_fill" transform="translate(1 -7045)" fill="#FFFFFF" fill-opacity="0.63"/>
 </g>
 </g>
 <g id="Status Bar">
 <g id="Status bar">
-<use xlink:href="#path17_fill" fill="url(#pattern0)" transform="translate(-3 -6414)"/>
+<use xlink:href="#path17_fill" fill="url(#pattern0)" transform="translate(-3 -7089)"/>
 </g>
 <g id="Vector 3">
-<use xlink:href="#path18_stroke" transform="translate(-9 -6394)" fill="#FFFFFF"/>
+<use xlink:href="#path18_stroke" transform="translate(-9 -7069)" fill="#FFFFFF"/>
 </g>
 </g>
+<g id="Bottom">
 <g id="Ellipse">
-<use xlink:href="#path19_fill" transform="translate(71 -5926)" fill="#3C3C3C" fill-opacity="0.49"/>
+<use xlink:href="#path19_fill" transform="matrix(0.707107 0.707107 -0.707107 0.707107 22.8792 -6663.26)" fill="#3C3C3C" fill-opacity="0.49"/>
 </g>
 <g id="search2">
-<use xlink:href="#path20_fill" fill="url(#pattern1)" transform="matrix(-1 0 0 1 132 -5885)"/>
+<use xlink:href="#path20_fill" fill="url(#pattern1)" transform="matrix(-1 0 0 1 29.894 -6606.93)"/>
 </g>
 <g id="plus1">
-<use xlink:href="#path21_fill" fill="url(#pattern2)" transform="translate(132 -5914)"/>
+<use xlink:href="#path21_fill" fill="url(#pattern2)" transform="matrix(1 0 0 1 38.9668 -6604.83)"/>
 </g>
 <g id="mark_all">
-<use xlink:href="#path22_fill" fill="url(#pattern3)" transform="translate(172 -5884)"/>
+<use xlink:href="#path22_fill" fill="url(#pattern3)" transform="matrix(1 0 0 1 50.745 -6556.7)"/>
+</g>
 </g>
 </g>
 </g>
