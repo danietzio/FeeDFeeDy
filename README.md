@@ -29,18 +29,18 @@ FeeDFeeDy is an open source RSS Feed Reader that you can use it to follow news f
   - [x] Subscribe && Unsubscribe RSS's
   - [x] Get Full Infomation of Each Feed
   - [x] Manage your websites feeds
-  - [ ] Mark All Feeds as Read
-  - [ ] Mark Feed as Starred Items
-  - [ ] Adding React Router to Application
-  - [ ] Search in all of the feeds
-  - [ ] Filtering the feeds
-  - [ ] Adding Setting Option To Application
-  - [ ] Register, Login, Sign out Functionality
-  - [ ] Converting Redis to MongoDB
-  - [ ] RSS's Categorizing Feature
-  - [ ] Sharing Information with Google+ , Facebook, ...
-  - [ ] Adding Recommender System for recommending popular RSS's
-  - [ ] Making User Experience better with Gsap, Pixijs, ...
+  - [x] Mark All Feeds as Read
+  - [x] Mark Feed as Starred Items
+  - [x] Adding React Router to Application
+  - [x] Search in all of the feeds
+  - [x] Filtering the feeds
+  - [x] Adding Setting Option To Application
+  - [x] Register, Login, Sign out Functionality
+  - [x] Converting Redis to MongoDB
+  - [x] RSS's Categorizing Feature
+  - [x] Sharing Information with Google+ , Facebook, ...
+  - [x] Adding Recommender System for recommending popular RSS's
+  - [x] Making User Experience better with Gsap, Pixijs, ...
   - [ ] Adding 3D Design to Application
   - [ ] and more ...
   
